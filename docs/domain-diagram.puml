@@ -100,6 +100,37 @@ package "Attendance Context" <<Node>> #F0F8FF {
     AttendanceRecord "1" --> "1" AttendanceStatus : has >
 }
 
+package "Staff Attendance Context" <<Node>> #FFFADF {
+    class WorkDayAttendance <<(A, #27D3F5) Aggregate Root>> {
+        - Long id
+        - LocalDate date
+        - TeacherId teacherId
+        + registerEntry(Source)
+        + registerExit(Source)
+    }
+
+    class EntryRecord <<(E, #9ACD32) Entity>> {
+        - LocalDateTime timestamp
+        - Source source
+    }
+
+    class ExitRecord <<(E, #9ACD32) Entity>> {
+        - LocalDateTime timestamp
+        - Source source
+    }
+
+    class Source <<(V, #FFD700) Value Object>> {
+        - String originType
+        - String deviceId
+    }
+
+    ' Relationships
+    WorkDayAttendance "1" --> "0..*" EntryRecord : has >
+    WorkDayAttendance "1" --> "0..*" ExitRecord : has >
+    EntryRecord "1" --> "1" Source : from >
+    ExitRecord "1" --> "1" Source : from >
+}
+
 package "Shared Context" as sc <<Node>> #FFF5F5 {
     class TeacherId <<(V, #FFD700) Value Object>> {
         - Long id
