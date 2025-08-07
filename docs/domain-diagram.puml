@@ -77,7 +77,7 @@ package "Scheduling Context" <<Node>> #FFF0F0 {
     ClassSession "1" --> "1" Room : heldIn >
 }
 
-package "Attendance Context" <<Node>> #F0F8FF {
+package "Student Attendance Context" <<Node>> #F0F8FF {
     class ClassAttendance <<(A, #27D3F5) Aggregate Root>> {
         - Long id
         - Long classSessionId
@@ -131,7 +131,7 @@ package "Staff Attendance Context" <<Node>> #FFFADF {
     ExitRecord "1" --> "1" Source : from >
 }
 
-package "Shared Context" as sc <<Node>> #FFF5F5 {
+package "Shared Context" <<Node>> #FFF5F5 {
     class TeacherId <<(V, #FFD700) Value Object>> {
         - Long id
     }
