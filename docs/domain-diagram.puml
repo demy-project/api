@@ -22,12 +22,14 @@ package "Enrollment Context" <<Node>> #E0FFF9 {
     }
 }
 
-package "Human" <<Node>> #F0FFF0 {
-
-    class Teacher <<(A, #27D3F5) Aggregate Root>> {
+package "Resources" <<Node>> #F0FFF0 {
+    class Administrator <<(A, #27D3F5) Aggregate Root>> {
         - Long id
     }
-    class Administrator <<(A, #27D3F5) Aggregate Root>> {
+    class Academy <<(E, #9ACD32) Entity>> {
+        - Long id
+    }
+    class Teacher <<(E, #9ACD32) Entity>> {
         - Long id
     }
 }
