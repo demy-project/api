@@ -13,25 +13,36 @@ package "Enrollment Context" <<Node>> #E0FFF9 {
         - Long id
     }
     enum EnrollmentStatus <<(E, #FFA500) Value Object>> {
-        PENDING
-        APPROVED
-        REJECTED
+        ACTIVE
+        INACTIVE
     }
     class AcademicPeriod <<(E, #9ACD32) Entity>> {
         - Long id
     }
+    ' Relationships
+    Enrollment "1" --> "1" Student : for >
+    AcademicPeriod "1" o-- "0..*" Enrollment : includes >
+    Enrollment "1" --> "1" EnrollmentStatus : has >
 }
 
-package "Resources" <<Node>> #F0FFF0 {
-    class Administrator <<(A, #27D3F5) Aggregate Root>> {
+package "Institution Management Context" <<Node>> #F0FFF0 {
+    class Academy <<(A, #27D3F5) Aggregate Root>> {
         - Long id
+        + addTeacher(Teacher)
+        + assignAdministrator(Administrator)
     }
-    class Academy <<(E, #9ACD32) Entity>> {
+    class Administrator <<(E, #9ACD32) Entity>> {
         - Long id
+        - String email
     }
+
     class Teacher <<(E, #9ACD32) Entity>> {
         - Long id
     }
+    ' Relationships
+    Administrator --> Academy : creates >
+    Academy --> Administrator : isManagedBy >
+    Academy --> Teacher : includes >
 }
 
 @enduml
