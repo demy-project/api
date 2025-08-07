@@ -1,8 +1,21 @@
 @startuml Demy Domain Diagram
 
+skinparam class {
+    BackgroundColor LightYellow/D3F5F5
+    ArrowColor SeaGreen
+}
+
 package "Enrollment Context" <<Node>> #E0FFF9 {
-    class Enrollment << (A, #27D3F5) Aggregate Root>> {
+    class Enrollment <<(A, #27D3F5) Aggregate Root>> {
         - Long id
+    }
+    class Student <<(E, #9ACD32) Entity>> {
+        - Long id
+    }
+    enum EnrollmentStatus <<(E, #FFA500) Enumeration>> {
+        PENDING
+        APPROVED
+        REJECTED
     }
 }
 
