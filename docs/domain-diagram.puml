@@ -62,7 +62,7 @@ package "Scheduling Context" <<Node>> #FFF0F0 {
         - Long id
     }
 
-    class Room <<(E, #9ACD32) Entity>> {
+    class Room <<(E, #9ACD32)Entity>> {
         - Long id
     }
 
@@ -76,32 +76,16 @@ package "Attendance Context" <<Node>> #F0F8FF {
     class ClassAttendance <<(A, #27D3F5) Aggregate Root>> {
         - Long id
         - Long classSessionId
-        + recordAttendance(ParticipantId, AttendanceStatus status)
+        + recordAttendance(Long studentId, AttendanceStatus status)
     }
 
     class AttendanceRecord <<(E, #9ACD32) Entity>> {
         - Long id
-        - Long participantId
-        - Source source
+        - Long studentId
         + changeStatus(AttendanceStatus newStatus)
     }
 
-    class ParticipantId <<(V, #FFD700) Value Object>> {
-        - Long id
-        - ParticipantType type
-    }
-
-    class Source <<(V, #FFD700) Value Object>> {
-        - String originType
-        - String deviceId
-    }
-
-    enum ParticipantType <<(V, #FFD700) Value Object>> {
-        STUDENT
-        TEACHER
-    }
-
-    enum AttendanceStatus <<(V, #FFD700) Value Object>> {
+    class AttendanceStatus <<(E, #9ACD32) Value Object>> {
         PRESENT
         ABSENT
         EXCUSED
