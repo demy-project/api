@@ -12,7 +12,7 @@ package "Enrollment Context" <<Node>> #E0FFF9 {
     class Student <<(E, #9ACD32) Entity>> {
         - Long id
     }
-    enum EnrollmentStatus <<(E, #FFA500) Enumeration>> {
+    enum EnrollmentStatus <<(E, #FFA500) Value Object>> {
         PENDING
         APPROVED
         REJECTED
