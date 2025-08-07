@@ -33,7 +33,6 @@ package "Institution Management Context" <<Node>> #F0FFF0 {
     }
     class Administrator <<(E, #9ACD32) Entity>> {
         - Long id
-        - String email
     }
 
     class Teacher <<(E, #9ACD32) Entity>> {
@@ -43,6 +42,44 @@ package "Institution Management Context" <<Node>> #F0FFF0 {
     Administrator --> Academy : creates >
     Academy --> Administrator : isManagedBy >
     Academy --> Teacher : includes >
+}
+
+package "Scheduling Context" <<Node>> #FFF0F0 {
+    class Schedule <<(A, #27D3F5) Aggregate Root>> {
+        - Long id
+        + addClassSession(ClassSession)
+        + removeClassSession(ClassSession)
+        + validateConflicts(): boolean
+    }
+
+    class ClassSession <<(E, #9ACD32) Entity>> {
+        - Long id
+    }
+
+    class Course <<(E, #9ACD32) Entity>> {
+        - Long id
+    }
+
+    class Room <<(E, #9ACD32)Entity>> {
+        - Long id
+    }
+
+    ' Relationships
+    Schedule "1" --> "0..*" ClassSession : contains >
+    ClassSession "1" --> "1" Course : belongsTo >
+    ClassSession "1" --> "1" Room : heldIn >
+}
+
+package "Attendance Context" <<Node>> #F0F8FF {
+    class AttendanceRecord <<(A, #27D3F5) Aggregate Root>> {
+        - Long id
+        + markAttendance(Student, ClassSession)
+    }
+    class AttendanceStatus <<(E, #9ACD32) Value Object>> {
+        PRESENT
+        ABSENT
+        EXCUSED
+    }
 }
 
 @enduml
