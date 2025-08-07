@@ -12,7 +12,7 @@ package "Enrollment Context" <<Node>> #E0FFF9 {
     class Student <<(E, #9ACD32) Entity>> {
         - Long id
     }
-    enum EnrollmentStatus <<(E, #FFA500) Value Object>> {
+    enum EnrollmentStatus <<(E, #FF7F50) Value Object>> {
         ACTIVE
         INACTIVE
     }
@@ -31,6 +31,7 @@ package "Institution Management Context" <<Node>> #F0FFF0 {
         + addTeacher(Teacher)
         + assignAdministrator(Administrator)
     }
+
     class Administrator <<(E, #9ACD32) Entity>> {
         - Long id
     }
@@ -38,10 +39,10 @@ package "Institution Management Context" <<Node>> #F0FFF0 {
     class Teacher <<(E, #9ACD32) Entity>> {
         - Long id
     }
+
     ' Relationships
-    Administrator --> Academy : creates >
-    Academy --> Administrator : isManagedBy >
-    Academy --> Teacher : includes >
+    Academy "1" --> "1" Administrator : isManagedBy >
+    Academy "1" --> "0..*" Teacher : includes >
 }
 
 package "Scheduling Context" <<Node>> #FFF0F0 {
