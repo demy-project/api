@@ -3,6 +3,11 @@
 skinparam class {
     BackgroundColor LightYellow/D3F5F5
     ArrowColor SeaGreen
+    ' BackgroundColor<<Aggregate Root>> #27D3F5
+    ' BackgroundColor<<Entity>> #9ACD32
+    ' BackgroundColor<<Value Object>> #FFD700
+    ' BorderColor Black
+    ' FontSize 12
 }
 
 package "Enrollment Context" <<Node>> #E0FFF9 {
@@ -85,7 +90,7 @@ package "Attendance Context" <<Node>> #F0F8FF {
         + changeStatus(AttendanceStatus newStatus)
     }
 
-    class AttendanceStatus <<(E, #9ACD32) Value Object>> {
+    enum AttendanceStatus <<(V, #FFD700) Value Object>> {
         PRESENT
         ABSENT
         EXCUSED
