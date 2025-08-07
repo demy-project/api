@@ -80,6 +80,10 @@ package "Attendance Context" <<Node>> #F0F8FF {
         ABSENT
         EXCUSED
     }
+    ' Relationships
+    AttendanceRecord "1" --> "1" Student : for >
+    AttendanceRecord "1" --> "1" ClassSession : during >
+    AttendanceRecord "1" --> "1" AttendanceStatus : has >
 }
 
 package "Shared Context" as sc <<Node>> #FFF5F5 {
