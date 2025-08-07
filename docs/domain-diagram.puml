@@ -1,0 +1,9 @@
+@startuml Demy Domain Diagram
+
+package "Enrollment Context" <<Node>> #E0FFF9 {
+    class Enrollment << (A, #27D3F5) Aggregate Root>> {
+        - Long id
+    }
+}
+
+@enduml
