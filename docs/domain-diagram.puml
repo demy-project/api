@@ -9,13 +9,22 @@ package "Enrollment Context" <<Node>> #E0FFF9 {
     class Enrollment <<(A, #27D3F5) Aggregate Root>> {
         - Long id
     }
-    class Student <<(E, #9ACD32) Entity>> {
-        - Long id
-    }
     enum EnrollmentStatus <<(E, #FFA500) Value Object>> {
         PENDING
         APPROVED
         REJECTED
+    }
+    class AcademicPeriod <<(E, #9ACD32) Entity>> {
+        - Long id
+    }
+}
+
+package "Human" <<Node>> #F0FFF0 {
+    class Student <<(A, #27D3F5) Aggregate Root>> {
+        - Long id
+    }
+    class Teacher <<(A, #27D3F5) Aggregate Root>> {
+        - Long id
     }
 }
 
