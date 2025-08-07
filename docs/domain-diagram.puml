@@ -54,6 +54,7 @@ package "Scheduling Context" <<Node>> #FFF0F0 {
 
     class ClassSession <<(E, #9ACD32) Entity>> {
         - Long id
+        - TeacherId teacherId
     }
 
     class Course <<(E, #9ACD32) Entity>> {
