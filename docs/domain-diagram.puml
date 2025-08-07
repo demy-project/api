@@ -72,18 +72,25 @@ package "Scheduling Context" <<Node>> #FFF0F0 {
 }
 
 package "Attendance Context" <<Node>> #F0F8FF {
-    class AttendanceRecord <<(A, #27D3F5) Aggregate Root>> {
+    class ClassAttendance <<(A, #27D3F5) Aggregate Root>> {
         - Long id
-        + markAttendance(Student, ClassSession)
+        - Long classSessionId
+        + recordAttendance(Long studentId, AttendanceStatus status)
     }
+
+    class AttendanceRecord <<(E, #9ACD32) Entity>> {
+        - Long id
+        - Long studentId
+        + changeStatus(AttendanceStatus newStatus)
+    }
+
     class AttendanceStatus <<(E, #9ACD32) Value Object>> {
         PRESENT
         ABSENT
         EXCUSED
     }
     ' Relationships
-    AttendanceRecord "1" --> "1" Student : for >
-    AttendanceRecord "1" --> "1" ClassSession : during >
+    ClassAttendance "1" --> "0..*" AttendanceRecord : includes >
     AttendanceRecord "1" --> "1" AttendanceStatus : has >
 }
 
