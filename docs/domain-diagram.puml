@@ -95,7 +95,7 @@ package "Attendance Context" <<Node>> #F0F8FF {
 }
 
 package "Shared Context" as sc <<Node>> #FFF5F5 {
-    class TeacherId <<(E, #9ACD32) Value Object>> {
+    class TeacherId <<(V, #FFD700) Value Object>> {
         - Long id
     }
 }
