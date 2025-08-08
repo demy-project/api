@@ -164,9 +164,25 @@ package "Finance Management" <<Node>> #DFFFFF {
         CASH
     }
 
+    class Transaction <<(A, #27D3F5) Aggregate Root>> {
+        - Long id
+        - Payment payment
+        - TransactionType type
+        - LocalDateTime timestamp
+    }
+
+    enum TransactionType <<(V, #FFD700) Value Object>> {
+        INCOME
+        EXPENSE
+    }
+
     ' Relationships
-    BillingAccount "1" o-- "0..*" Invoice : has >
-    BillingAccount "1" o-- "0..*" Payment : has >
+    BillingAccount "1" o-- "0..*" Invoice : manages >
+    'BillingAccount "1" o-- "0..*" Payment : records >
+    Payment "1" --> "1" PaymentMethod : madeBy >
+
+    Transaction "1" --> "1" Payment : involves >
+    Transaction "1" --> "1" TransactionType : categorizedAs >
 }
 
 package "Shared Context" <<Node>> #FFF5F5 {
