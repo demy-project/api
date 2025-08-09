@@ -206,12 +206,54 @@ package "Accounting Management" <<Node>> #FFEFD5 {
         OTHER
     }
 
+    class Report <<(A, #27D3F5) Aggregate Root>> {
+        - Long id
+        - ReportPeriod period
+        - ReportStatus status
+        - String generatedBy
+        + generateReport(): void
+        + exportToPdf(): byte[]
+        + exportToExcel(): byte[]
+        + isCompleted(): boolean
+    }
+
+    class ReportSnapshot <<(E, #9ACD32) Entity>> {
+        - Long id
+        - ReportSection section
+        - String sectionData
+        - BigDecimal totalAmount
+    }
+
+    class ReportPeriod <<(V, #FFD700) Value Object>> {
+        - LocalDate startDate
+        - LocalDate endDate
+        + isValidPeriod(): boolean
+    }
+
+    enum ReportSection <<(V, #FFD700) Value Object>> {
+        INCOME_SUMMARY
+        EXPENSE_SUMMARY
+        CATEGORY_BREAKDOWN
+        PAYMENT_METHODS
+    }
+
+    enum ReportStatus <<(V, #FFD700) Value Object>> {
+        GENERATING
+        COMPLETED
+        FAILED
+    }
+
     ' Relationships
     Transaction "1" --> "1" TransactionType : has >
     Transaction "1" --> "1" TransactionCategory : categorizedAs >
     Transaction "1" --> "1" TransactionMethod : uses >
     Transaction "1" --> "1" TransactionReference : references >
     TransactionReference "1" --> "1" ReferenceType : ofType >
+
+    Report "1" --> "0..*" ReportSnapshot : contains >
+    Report "1" --> "1" ReportPeriod : covers >
+    Report "1" --> "1" ReportStatus : has >
+    ReportSnapshot "1" --> "1" ReportSection : represents >
 }
 
 package "Shared Context" <<Node>> #FFF5F5 {
