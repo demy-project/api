@@ -11,23 +11,38 @@ skinparam class {
 }
 
 package "Enrollment Context" <<Node>> #E0FFF9 {
+    class AcademicPeriod <<(A, #27D3F5) Aggregate Root>> {
+        - Long id
+        - AcademyId academyId
+    }
+
     class Enrollment <<(A, #27D3F5) Aggregate Root>> {
         - Long id
+        - AcademicPeriodId academicPeriodId
+        - StudentId studentId
     }
-    class Student <<(E, #9ACD32) Entity>> {
+
+    class Student <<(A, #27D3F5) Aggregate Root>> {
         - Long id
     }
+
+    class StudentId <<(V, #FFD700) Value Object>> {
+        - Long id
+    }
+
+    class AcademicPeriodId <<(V, #FFD700) Value Object>> {
+        - Long id
+    }
+
     enum EnrollmentStatus <<(E, #FF7F50) Value Object>> {
         ACTIVE
         INACTIVE
     }
-    class AcademicPeriod <<(E, #9ACD32) Entity>> {
-        - Long id
-    }
+
     ' Relationships
-    Enrollment "1" --> "1" Student : for >
-    AcademicPeriod "1" o-- "0..*" Enrollment : includes >
-    Enrollment "1" --> "1" EnrollmentStatus : has >
+    Enrollment "1" *-- "1" StudentId : for >
+    Enrollment "1" *-- "1" AcademicPeriodId : in >
+    Enrollment "1" *-- "1" EnrollmentStatus : has >
 }
 
 package "Institution Management Context" <<Node>> #F0FFF0 {
