@@ -150,6 +150,10 @@ package "Billing Management" <<Node>> #DFFFFF {
         + registerPayment(Payment)
     }
 
+    class InvoicePaidEvent <<(D, #7FFFD4) Domain Event>> {
+
+    }
+
     enum InvoiceStatus <<(V, #FFD700) Value Object>> {
         PENDING
         PAID
@@ -158,6 +162,7 @@ package "Billing Management" <<Node>> #DFFFFF {
     }
 
     ' Relationships
+    BillingAccount "1" --> "0..*" InvoicePaidEvent : emits >
     BillingAccount "1" o-- "0..*" Invoice : manages >
     Invoice "1" --> "1" InvoiceStatus : has >
 }
