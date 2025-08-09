@@ -13,16 +13,24 @@ skinparam class {
 package "Enrollment Context" <<Node>> #E0FFF9 {
     class AcademicPeriod <<(A, #27D3F5) Aggregate Root>> {
         - Long id
+        - PeriodDuration duration
+        - PeriodStatus status
         - AcademyId academyId
     }
 
     class Enrollment <<(A, #27D3F5) Aggregate Root>> {
         - Long id
-        - AcademicPeriodId academicPeriodId
+        - AcademicPeriodId periodId
         - StudentId studentId
+        - ScheduleId scheduleId
+        - EnrollmentStatus status
     }
 
     class Student <<(A, #27D3F5) Aggregate Root>> {
+        - Long id
+    }
+
+    class AcademicPeriodId <<(V, #FFD700) Value Object>> {
         - Long id
     }
 
@@ -30,8 +38,21 @@ package "Enrollment Context" <<Node>> #E0FFF9 {
         - Long id
     }
 
-    class AcademicPeriodId <<(V, #FFD700) Value Object>> {
+    class ScheduleId <<(V, #FFD700) Value Object>> {
         - Long id
+    }
+
+    class PeriodDuration <<(V, #FFD700) Value Object>> {
+        - LocalDate startDate
+        - LocalDate endDate
+        + boolean isCurrentlyActive()
+        + int getDurationInDays()
+    }
+
+    class PeriodStatus <<(V, #FFD700) Value Object>> {
+        - boolean isActive
+        + {static} ActiveStatus active()
+        + {static} ActiveStatus inactive()
     }
 
     enum EnrollmentStatus <<(E, #FF7F50) Value Object>> {
@@ -40,8 +61,11 @@ package "Enrollment Context" <<Node>> #E0FFF9 {
     }
 
     ' Relationships
-    Enrollment "1" *-- "1" StudentId : for >
+    AcademicPeriod "1" *-- "1" PeriodDuration : has >
+    AcademicPeriod "1" *-- "1" PeriodStatus : withStatus >
     Enrollment "1" *-- "1" AcademicPeriodId : in >
+    Enrollment "1" *-- "1" StudentId : for >
+    Enrollment "1" *-- "1" ScheduleId : uses >
     Enrollment "1" *-- "1" EnrollmentStatus : has >
 }
 
