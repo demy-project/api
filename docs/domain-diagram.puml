@@ -131,7 +131,7 @@ package "Staff Attendance Context" <<Node>> #FFFADF {
     ExitRecord "1" --> "1" Source : from >
 }
 
-package "Finance Management" <<Node>> #DFFFFF {
+package "Billing Management" <<Node>> #DFFFFF {
     class BillingAccount <<(A, #27D3F5) Aggregate Root>> {
         - Long id
         - Long studentId
@@ -151,6 +151,18 @@ package "Finance Management" <<Node>> #DFFFFF {
         + isPaid()
     }
 
+    ' Relationships
+    BillingAccount "1" o-- "0..*" Invoice : manages >
+}
+
+package "Accounting Management" <<Node>> #FFEFD5 {
+    class Transaction <<(A, #27D3F5) Aggregate Root>> {
+        - Long id
+        - Payment payment
+        - TransactionType type
+        - LocalDateTime timestamp
+    }
+
     class Payment <<(E, #9ACD32) Entity>> {
         - Long id
         - BigDecimal amount
@@ -164,28 +176,11 @@ package "Finance Management" <<Node>> #DFFFFF {
         CASH
     }
 
-    class Transaction <<(A, #27D3F5) Aggregate Root>> {
-        - Long id
-        - Payment payment
-        - TransactionType type
-        - LocalDateTime timestamp
-    }
-
     enum TransactionType <<(V, #FFD700) Value Object>> {
         INCOME
         EXPENSE
     }
 
-    ' Relationships
-    BillingAccount "1" o-- "0..*" Invoice : manages >
-    'BillingAccount "1" o-- "0..*" Payment : records >
-    Payment "1" --> "1" PaymentMethod : madeBy >
-
-    Transaction "1" --> "1" Payment : involves >
-    Transaction "1" --> "1" TransactionType : categorizedAs >
-}
-
-package "Accounting Management" <<Node>> #FFEFD5 {
     class AccountingSystem <<(A, #27D3F5) Aggregate Root>> {
         - Long id
         + generateFinancialReport(LocalDate startDate, LocalDate endDate)
