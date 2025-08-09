@@ -165,19 +165,15 @@ package "Billing Management" <<Node>> #DFFFFF {
 package "Accounting Management" <<Node>> #FFEFD5 {
     class Transaction <<(A, #27D3F5) Aggregate Root>> {
         - Long id
-        - Payment payment
         - TransactionType type
-        - LocalDateTime timestamp
-    }
-
-    class Payment <<(E, #9ACD32) Entity>> {
-        - Long id
+        - TransactionCategory category
+        - TransactionMethod method
+        - String concept
         - BigDecimal amount
-        - LocalDate paymentDate
-        - PaymentMethod method
+        - LocalDateTime date
     }
 
-    enum PaymentMethod <<(V, #FFD700) Value Object>> {
+    enum TransactionMethod <<(V, #FFD700) Value Object>> {
         CREDIT_CARD
         BANK_TRANSFER
         CASH
@@ -188,12 +184,15 @@ package "Accounting Management" <<Node>> #FFEFD5 {
         EXPENSE
     }
 
-    class AccountingSystem <<(A, #27D3F5) Aggregate Root>> {
-        - Long id
-        + generateFinancialReport(LocalDate startDate, LocalDate endDate)
+    enum TransactionCategory <<(V, #FFD700) Value Object>> {
+        STUDENTS
+        MATERIALS
+        SALARY
+        UTILITIES
+        OTHER
     }
 
-    class FinancialReport <<(E, #9ACD32) Entity>> {
+    class FinancialReport <<(A, #27D3F5) Aggregate Root>> {
         - Long id
         - LocalDate startDate
         - LocalDate endDate
@@ -202,7 +201,9 @@ package "Accounting Management" <<Node>> #FFEFD5 {
     }
 
     ' Relationships
-    AccountingSystem "1" o-- "0..*" FinancialReport : generates >
+    Transaction "1" --> "1" TransactionType : has >
+    Transaction "1" --> "1" TransactionCategory : categorizedAs >
+    Transaction "1" --> "1" TransactionMethod : uses >
 }
 
 package "Shared Context" <<Node>> #FFF5F5 {
