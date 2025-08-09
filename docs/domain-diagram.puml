@@ -136,9 +136,7 @@ package "Billing Management" <<Node>> #DFFFFF {
         - Long id
         - Long studentId
         - List<Invoice> invoices
-        - List<Payment> payments
         + addInvoice(Invoice)
-        + registerPayment(Payment)
         + getOutstandingBalance()
         + getInvoiceStatus(invoiceId)
     }
@@ -147,8 +145,9 @@ package "Billing Management" <<Node>> #DFFFFF {
         - Long id
         - BigDecimal totalAmount
         - LocalDate dueDate
-        - BigDecimal paidAmount
+        - Payment payment
         + isPaid()
+        + registerPayment(Payment)
     }
 
     ' Relationships
