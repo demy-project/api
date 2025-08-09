@@ -145,20 +145,21 @@ package "Billing Management" <<Node>> #DFFFFF {
         - Long id
         - BigDecimal totalAmount
         - LocalDate dueDate
-        - Payment payment
+        - InvoiceStatus status
         + isPaid()
         + registerPayment(Payment)
     }
 
-    class Payment <<(V, #FFD700) Value Object>> {
-        - BigDecimal amount
-        - LocalDate paymentDate
-        - String method  ' e.g., credit_card, bank_transfer
+    enum InvoiceStatus <<(V, #FFD700) Value Object>> {
+        PENDING
+        PAID
+        OVERDUE
+        CANCELLED
     }
 
     ' Relationships
     BillingAccount "1" o-- "0..*" Invoice : manages >
-    Invoice "1" o-- "0..1" Payment : has >
+    Invoice "1" --> "1" InvoiceStatus : has >
 }
 
 package "Accounting Management" <<Node>> #FFEFD5 {
