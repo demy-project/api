@@ -185,6 +185,24 @@ package "Finance Management" <<Node>> #DFFFFF {
     Transaction "1" --> "1" TransactionType : categorizedAs >
 }
 
+package "Accounting Management" <<Node>> #FFEFD5 {
+    class AccountingSystem <<(A, #27D3F5) Aggregate Root>> {
+        - Long id
+        + generateFinancialReport(LocalDate startDate, LocalDate endDate)
+    }
+
+    class FinancialReport <<(E, #9ACD32) Entity>> {
+        - Long id
+        - LocalDate startDate
+        - LocalDate endDate
+        - BigDecimal totalIncome
+        - BigDecimal totalExpenses
+    }
+
+    ' Relationships
+    AccountingSystem "1" o-- "0..*" FinancialReport : generates >
+}
+
 package "Shared Context" <<Node>> #FFF5F5 {
     class TeacherId <<(V, #FFD700) Value Object>> {
         - Long id
