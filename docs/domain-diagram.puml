@@ -150,8 +150,15 @@ package "Billing Management" <<Node>> #DFFFFF {
         + registerPayment(Payment)
     }
 
+    class Payment <<(V, #FFD700) Value Object>> {
+        - BigDecimal amount
+        - LocalDate paymentDate
+        - String method  ' e.g., credit_card, bank_transfer
+    }
+
     ' Relationships
     BillingAccount "1" o-- "0..*" Invoice : manages >
+    Invoice "1" o-- "0..1" Payment : has >
 }
 
 package "Accounting Management" <<Node>> #FFEFD5 {
