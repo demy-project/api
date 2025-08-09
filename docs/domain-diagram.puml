@@ -168,9 +168,23 @@ package "Accounting Management" <<Node>> #FFEFD5 {
         - TransactionType type
         - TransactionCategory category
         - TransactionMethod method
+        - TransactionReference reference
         - String concept
         - BigDecimal amount
         - LocalDateTime date
+        + isManualEntry(): boolean
+        + isFromExternalSystem(): boolean
+        + validateReferenceId(): boolean
+    }
+
+    class TransactionReference <<(V, #FFD700) Value Object>> {
+        - ReferenceType type
+        - String referenceId
+    }
+
+    enum ReferenceType <<(V, #FFD700) Value Object>> {
+        MANUAL
+        AUTOMATIC
     }
 
     enum TransactionMethod <<(V, #FFD700) Value Object>> {
@@ -192,18 +206,12 @@ package "Accounting Management" <<Node>> #FFEFD5 {
         OTHER
     }
 
-    class FinancialReport <<(A, #27D3F5) Aggregate Root>> {
-        - Long id
-        - LocalDate startDate
-        - LocalDate endDate
-        - BigDecimal totalIncome
-        - BigDecimal totalExpenses
-    }
-
     ' Relationships
     Transaction "1" --> "1" TransactionType : has >
     Transaction "1" --> "1" TransactionCategory : categorizedAs >
     Transaction "1" --> "1" TransactionMethod : uses >
+    Transaction "1" --> "1" TransactionReference : references >
+    TransactionReference "1" --> "1" ReferenceType : ofType >
 }
 
 package "Shared Context" <<Node>> #FFF5F5 {
