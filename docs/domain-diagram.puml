@@ -28,6 +28,14 @@ package "Enrollment Context" <<Node>> #E0FFF9 {
 
     class Student <<(A, #27D3F5) Aggregate Root>> {
         - Long id
+        - FullName fullName
+        - Dni dni
+        - Sex sex
+        - LocalDate birthDate
+        - String address
+        - String phoneNumber
+        - String email
+        + updateContactInfo(String address, String phoneNumber, String email)
     }
 
     class AcademicPeriodId <<(V, #FFD700) Value Object>> {
@@ -302,14 +310,21 @@ package "Accounting Management" <<Node>> #FFEFD5 {
     ReportSnapshot "1" --> "1" ReportSection : represents >
 }
 
-package "Shared Context" <<Node>> #FFF5F5 {
+package "Shared Kernel" <<Node>> #FFF5F5 {
     class TeacherId <<(V, #FFD700) Value Object>> {
         - Long id
+    }
+
+    class FullName <<(V, #FFD700) Value Object>> {
+        - String firstName
+        - String lastName
+        + String getFullName()
     }
 }
 
 ' Define relationships between contexts
-ClassSession "1" --> "1" TeacherId : taughtBy >
-WorkDayAttendance "1" --> "1" TeacherId : for >
+'Student "1" --> "1" FullName : has >
+'ClassSession "1" --> "1" TeacherId : taughtBy >
+'WorkDayAttendance "1" --> "1" TeacherId : for >
 
 @enduml
