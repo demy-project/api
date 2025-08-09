@@ -80,15 +80,29 @@ package "Enrollment Context" <<Node>> #E0FFF9 {
 package "Institution Management Context" <<Node>> #F0FFF0 {
     class Academy <<(A, #27D3F5) Aggregate Root>> {
         - Long id
+        - AdministratorId adminId
+        - Ruc ruc
         + addTeacher(Teacher)
         + assignAdministrator(Administrator)
     }
 
-    class Teacher <<(A, #27D3F5) Aggregate Root>> {
+    class Administrator <<(A, #27D3F5) Aggregate Root>> {
         - Long id
+        - AcademyId academyId
+        - FullName fullName
     }
 
-    class Administrator <<(E, #9ACD32) Entity>> {
+    class Teacher <<(A, #27D3F5) Aggregate Root>> {
+        - Long id
+        - AcademyId academyId
+        - FullName fullName
+    }
+
+    class Ruc <<(V, #FFD700) Value Object>> {
+        - String value
+    }
+
+    class AdministratorId <<(V, #FFD700) Value Object>> {
         - Long id
     }
 
@@ -97,7 +111,8 @@ package "Institution Management Context" <<Node>> #F0FFF0 {
     }
 
     ' Relationships
-    Academy "1" --> "1" Administrator : isManagedBy >
+    Academy "1" *-- "1" Ruc : has >
+    Academy "1" ..> "1" AdministratorId : isManagedBy >
     Academy "1" ..> "0..*" TeacherId : includes >
 }
 
