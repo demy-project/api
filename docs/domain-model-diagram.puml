@@ -1,4 +1,4 @@
-@startuml Demy: Diagrams of Domain Models
+@startuml Demy: Domain Model Diagram (Grouped by Bounded Context)
 
 skinparam class {
     BackgroundColor LightYellow/D3F5F5
@@ -121,30 +121,83 @@ package "Institution Management Context" <<Node>> #F0FFF0 {
 package "Scheduling Context" <<Node>> #FFF0F0 {
     class Schedule <<(A, #27D3F5) Aggregate Root>> {
         - Long id
+        - String name
+        - AcademyId academyId
+        # Schedule()
         + addClassSession(ClassSession)
         + removeClassSession(ClassSession)
         + validateConflicts(): boolean
     }
 
-    class ClassSession <<(E, #9ACD32) Entity>> {
-        - Long id
-        - TeacherId teacherId
-    }
-
     class Course <<(A, #27D3F5) Aggregate Root>> {
         - Long id
+        - String name
+        - CourseCode courseCode
+        - String description
+        - AcademyId academyId
+        # Course()
     }
 
     class Classroom <<(A, #27D3F5) Aggregate Root>> {
+        - Long id
+        - ClassroomCode classroomCode
+        - Integer capacity
+        - String campus
+        - AcademyId academyId
+        # Classroom()
+    }
+
+    class ClassSession <<(E, #9ACD32) Entity>> {
+        - Long id
+        - CourseId courseId
+        - ClassroomId classroomId
+        - TeacherId teacherId
+        - DayOfWeek dayOfWeek
+        - TimeRange timeRange
+    }
+
+    enum DayOfWeek <<(V, #FFD700) Value Object>> {
+        MONDAY,
+        TUESDAY,
+        WEDNESDAY,
+        THURSDAY,
+        FRIDAY,
+        SATURDAY,
+        SUNDAY
+    }
+
+    class TimeRange <<(V, #FFD700) Value Object>> {
+        - LocalTime startTime
+        - LocalTime endTime
+        + boolean overlapsWith(TimeRange other)
+    }
+
+    class CourseCode <<(V, #FFD700) Value Object>> {
+        - String code
+    }
+
+    class ClassroomCode <<(V, #FFD700) Value Object>> {
+        - String code
+    }
+
+    class CourseId <<(V, #FFD700) Value Object>> {
+        - Long id
+    }
+
+    class ClassroomId <<(V, #FFD700) Value Object>> {
         - Long id
     }
 
     ' Relationships
     Schedule "1" *-- "0..*" ClassSession : contains >
+    ClassSession "1" *-- "1" DayOfWeek : occursOn >
+    ClassSession "1" *-- "1" TimeRange : has >
+    Course "1" *-- "1" CourseCode : has >
+    Classroom "1" *-- "1" ClassroomCode : has >
 
     ' Weak (ID-based) references
-    ClassSession ..> Course : courseId >
-    ClassSession ..> Classroom : classroomId >
+    ClassSession ..> CourseId : has >
+    ClassSession ..> ClassroomId : in >
 }
 
 package "Student Attendance Context" <<Node>> #F0F8FF {
