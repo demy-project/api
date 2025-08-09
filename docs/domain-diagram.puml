@@ -24,6 +24,7 @@ package "Enrollment Context" <<Node>> #E0FFF9 {
         - StudentId studentId
         - ScheduleId scheduleId
         - EnrollmentStatus status
+        - AcademyId academyId
     }
 
     class Student <<(A, #27D3F5) Aggregate Root>> {
@@ -35,6 +36,7 @@ package "Enrollment Context" <<Node>> #E0FFF9 {
         - String address
         - String phoneNumber
         - String email
+        - AcademyId academyId
         + updateContactInfo(String address, String phoneNumber, String email)
     }
 
@@ -330,6 +332,10 @@ package "Accounting Management" <<Node>> #FFEFD5 {
 }
 
 package "Shared Kernel" <<Node>> #FFF5F5 {
+    class AcademyId <<(V, #FFD700) Value Object>> {
+        - Long id
+    }
+
     class TeacherId <<(V, #FFD700) Value Object>> {
         - Long id
     }
@@ -342,6 +348,7 @@ package "Shared Kernel" <<Node>> #FFF5F5 {
 }
 
 ' Define relationships between contexts
+AcademicPeriod "1" ..> "1" AcademyId : belongsTo >
 'Student "1" --> "1" FullName : has >
 'ClassSession "1" --> "1" TeacherId : taughtBy >
 'WorkDayAttendance "1" --> "1" TeacherId : for >
