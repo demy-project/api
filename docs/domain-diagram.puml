@@ -71,9 +71,9 @@ package "Enrollment Context" <<Node>> #E0FFF9 {
     ' Relationships
     AcademicPeriod "1" *-- "1" PeriodDuration : has >
     AcademicPeriod "1" *-- "1" PeriodStatus : withStatus >
-    Enrollment "1" *-- "1" AcademicPeriodId : in >
-    Enrollment "1" *-- "1" StudentId : for >
-    Enrollment "1" *-- "1" ScheduleId : uses >
+    Enrollment "1" ..> "1" AcademicPeriodId : in >
+    Enrollment "1" ..> "1" StudentId : for >
+    Enrollment "1" ..> "1" ScheduleId : uses >
     Enrollment "1" *-- "1" EnrollmentStatus : has >
 }
 
