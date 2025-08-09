@@ -200,16 +200,20 @@ package "Scheduling Context" <<Node>> #FFF0F0 {
     ClassSession ..> ClassroomId : in >
 }
 
-package "Student Attendance Context" <<Node>> #F0F8FF {
+package "Attendance Context" <<Node>> #F0F8FF {
     class ClassAttendance <<(A, #27D3F5) Aggregate Root>> {
         - Long id
-        - Long classSessionId
-        + recordAttendance(Long studentId, AttendanceStatus status)
+        - ClassSessionId classSessionId
+        - LocalDate date
+        - List<AttendanceRecord> attendances
+        - AcademyId academyId
+        # ClassAttendance()
+        + recordAttendance(StudentId studentId, AttendanceStatus status)
     }
 
     class AttendanceRecord <<(E, #9ACD32) Entity>> {
         - Long id
-        - Long studentId
+        - StudentId studentId
         + changeStatus(AttendanceStatus newStatus)
     }
 
@@ -218,9 +222,15 @@ package "Student Attendance Context" <<Node>> #F0F8FF {
         ABSENT
         EXCUSED
     }
+
+    class ClassSessionId <<(V, #FFD700) Value Object>> {
+        - Long id
+    }
+
     ' Relationships
-    ClassAttendance "1" --> "0..*" AttendanceRecord : includes >
-    AttendanceRecord "1" --> "1" AttendanceStatus : has >
+    ClassAttendance "1" *-- "0..*" AttendanceRecord : includes >
+    ClassAttendance "1" ..> "1" ClassSessionId : for >
+    AttendanceRecord "1" *-- "1" AttendanceStatus : has >
 }
 
 package "Staff Attendance Context" <<Node>> #FFFADF {
