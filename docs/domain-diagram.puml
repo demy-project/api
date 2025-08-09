@@ -63,18 +63,20 @@ package "Scheduling Context" <<Node>> #FFF0F0 {
         - TeacherId teacherId
     }
 
-    class Course <<(E, #9ACD32) Entity>> {
+    class Course <<(A, #27D3F5) Aggregate Root>> {
         - Long id
     }
 
-    class Room <<(E, #9ACD32)Entity>> {
+    class Classroom <<(A, #27D3F5) Aggregate Root>> {
         - Long id
     }
 
     ' Relationships
-    Schedule "1" --> "0..*" ClassSession : contains >
-    ClassSession "1" --> "1" Course : belongsTo >
-    ClassSession "1" --> "1" Room : heldIn >
+    Schedule "1" *-- "0..*" ClassSession : contains >
+
+    ' Weak (ID-based) references
+    ClassSession ..> Course : courseId >
+    ClassSession ..> Classroom : classroomId >
 }
 
 package "Student Attendance Context" <<Node>> #F0F8FF {
