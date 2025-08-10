@@ -8,4 +8,7 @@ public record EmailAddress(
         @Column(nullable = false, unique = true)
         String email
 ) {
+    public EmailAddress() {
+        this("");
+    }
 }
