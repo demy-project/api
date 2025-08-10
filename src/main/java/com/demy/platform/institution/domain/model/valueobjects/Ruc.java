@@ -6,9 +6,13 @@ import jakarta.validation.constraints.NotBlank;
 
 /**
  * RUC (Registro Único de Contribuyentes) Value Object
+ * Represents a unique taxpayer registration number in Peru.
+ * Enforces validation rules for non-blank, length, and digit-only constraints.
+ *
  * @summary
  * Represents a RUC (Registro Único de Contribuyentes) value object with validation.
  *
+ * @see IllegalArgumentException
  * @since 1.0.0
  */
 @Embeddable
