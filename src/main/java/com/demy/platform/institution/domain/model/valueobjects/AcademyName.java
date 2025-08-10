@@ -10,4 +10,7 @@ public record AcademyName(
         @NotBlank
         String name
 ) {
+    public AcademyName() {
+        this("");
+    }
 }
