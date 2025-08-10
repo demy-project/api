@@ -10,12 +10,12 @@ import lombok.Getter;
 @Entity
 public class Academy extends AuditableAbstractAggregateRoot<Academy> {
 
-    @Getter
     @Embedded
+    @Getter
     private AdministratorId administratorId;
 
-    @Getter
     @Embedded
+    @Getter
     private Ruc ruc;
 
     /**
