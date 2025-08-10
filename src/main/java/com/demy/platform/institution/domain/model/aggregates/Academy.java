@@ -69,9 +69,20 @@ public class Academy extends AuditableAbstractAggregateRoot<Academy> {
      * @see AdministratorId
      * @see Ruc
      */
-    public Academy(AdministratorId administratorId, Ruc ruc) {
+    public Academy(AdministratorId administratorId,
+                   Ruc ruc,
+                   AcademyName academyName,
+                   AcademyDescription academyDescription,
+                   StreetAddress streetAddress,
+                   EmailAddress emailAddress,
+                   PhoneNumber phoneNumber) {
         this.administratorId = administratorId;
         this.ruc = ruc;
+        this.academyName = academyName;
+        this.academyDescription = academyDescription;
+        this.streetAddress = streetAddress;
+        this.emailAddress = emailAddress;
+        this.phoneNumber = phoneNumber;
     }
 
     /**
@@ -81,6 +92,14 @@ public class Academy extends AuditableAbstractAggregateRoot<Academy> {
      * @see RegisterAcademyCommand
      */
     public Academy(RegisterAcademyCommand command) {
-        this(command.administratorId(), command.ruc());
+        this(
+                command.administratorId(),
+                command.ruc(),
+                command.academyName(),
+                command.academyDescription(),
+                command.streetAddress(),
+                command.emailAddress(),
+                command.phoneNumber()
+        );
     }
 }
