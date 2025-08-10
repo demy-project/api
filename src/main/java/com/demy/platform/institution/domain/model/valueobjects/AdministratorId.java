@@ -2,16 +2,16 @@ package com.demy.platform.institution.domain.model.valueobjects;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 @Embeddable
 public record AdministratorId(
-        @NotBlank
+        @NotNull
         @Column(nullable = false, unique = true)
-        String administratorId
+        Long administratorId
 ) {
     public AdministratorId {
-        if (administratorId == null || administratorId.isBlank())
-            throw new IllegalArgumentException("Administrator ID cannot be null or blank");
+        if (administratorId == null || administratorId <= 0)
+            throw new IllegalArgumentException("Administrator ID cannot be null or less than or equal to zero");
     }
 }
