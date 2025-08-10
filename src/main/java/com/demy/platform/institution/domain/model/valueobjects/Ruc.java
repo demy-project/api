@@ -17,8 +17,8 @@ import jakarta.validation.constraints.NotBlank;
  */
 @Embeddable
 public record Ruc(
-        @NotBlank
         @Column(nullable = false, length = 11, unique = true)
+        @NotBlank
         String ruc
 ) {
     /**
