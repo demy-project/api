@@ -315,6 +315,8 @@ package "Accounting Management" <<Node>> #FFEFD5 {
         - String concept
         - BigDecimal amount
         - LocalDateTime date
+        - AcademyId academyId
+        # Transaction()
         + isManualEntry(): boolean
         + isFromExternalSystem(): boolean
         + validateReferenceId(): boolean
