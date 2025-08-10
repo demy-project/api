@@ -269,6 +269,8 @@ package "Billing Management" <<Node>> #DFFFFF {
         - Long id
         - Long studentId
         - List<Invoice> invoices
+        - AcademyId academyId
+        # BillingAccount()
         + addInvoice(Invoice)
         + getOutstandingBalance()
         + getInvoiceStatus(invoiceId)
@@ -284,7 +286,10 @@ package "Billing Management" <<Node>> #DFFFFF {
     }
 
     class InvoicePaidEvent <<(D, #7FFFD4) Domain Event>> {
-
+        - Long invoiceId
+        - BigDecimal amountPaid
+        - LocalDateTime paymentDate
+        + notifyPaymentReceived()
     }
 
     enum InvoiceStatus <<(V, #FFD700) Value Object>> {
