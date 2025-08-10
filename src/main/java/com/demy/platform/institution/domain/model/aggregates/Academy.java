@@ -21,8 +21,5 @@ public class Academy extends AuditableAbstractAggregateRoot<Academy> {
     /**
      * Default constructor for JPA
      */
-    public Academy() {
-        this.administratorId = new AdministratorId();
-        this.ruc = new Ruc();
-    }
+    protected Academy() {}
 }
