@@ -22,4 +22,7 @@ public record StreetAddress(
         @NotBlank
         String department
 ) {
+    public StreetAddress() {
+        this("", "", "", "");
+    }
 }
