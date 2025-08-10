@@ -18,12 +18,12 @@ import jakarta.validation.constraints.NotBlank;
  */
 @Embeddable
 public record FullName(
-        @NotBlank
         @Column(nullable = false, length = 50)
+        @NotBlank
         String firstName,
 
-        @NotBlank
         @Column(nullable = false, length = 50)
+        @NotBlank
         String lastName
 ) {
     /**
