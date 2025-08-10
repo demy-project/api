@@ -10,4 +10,8 @@ public record AdministratorId(
         @Column(nullable = false, unique = true)
         String administratorId
 ) {
+    public AdministratorId {
+        if (administratorId == null || administratorId.isBlank())
+            throw new IllegalArgumentException("Administrator ID cannot be null or blank");
+    }
 }
