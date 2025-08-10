@@ -29,4 +29,12 @@ public record PhoneNumber(
         if (!number.replaceAll("[\\s\\-]", "").matches("^\\d{6,12}$"))
             throw new IllegalArgumentException("Invalid local number");
     }
+
+    public String getFullNumber() {
+        return countryCode.replace("+", "") + number.replaceAll("[\\s\\-]", "");
+    }
+
+    public String getFormatted() {
+        return String.format("%s %s", countryCode, number);
+    }
 }
