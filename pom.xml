@@ -11,8 +11,8 @@
     <groupId>com.demy</groupId>
     <artifactId>platform</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>demy-test</name>
-    <description>demy-test</description>
+    <name>demy-api</name>
+    <description>demy-api</description>
     <url/>
     <licenses>
         <license/>
