@@ -5,7 +5,9 @@ import jakarta.persistence.Embeddable;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * AdministratorId
+ * AdministratorId Value Object
+ * Represents the unique identifier for an administrator in the institution domain.
+ * This class encapsulates the administrator's ID, ensuring it is not null and greater than zero.
  *
  * @summary
  * Value object representing the unique identifier for an administrator in the institution domain.
