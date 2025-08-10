@@ -1,6 +1,7 @@
 package com.demy.platform.institution.domain.model.valueobjects;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
 import jakarta.validation.constraints.NotBlank;
 
 /**
@@ -8,11 +9,13 @@ import jakarta.validation.constraints.NotBlank;
  * <p>
  * Encapsulates the academy description ensuring it is not null or blank.
  * Used as an embeddable in the persistence layer.
+ * It is marked as embeddable for use in JPA entities.
  *
  * @author Salim Ramirez
  * @see IllegalArgumentException
  * @since 1.0.0
  */
+@Embeddable
 public record AcademyDescription(
         @Column(nullable = false)
         @NotBlank
