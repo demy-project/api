@@ -10,4 +10,7 @@ public record AcademyId(
         @NotNull
         Long academyId
 ) {
+    public AcademyId() {
+        this(0L);
+    }
 }
