@@ -1,9 +1,14 @@
 package com.demy.platform.institution.domain.model.aggregates;
 
 import com.demy.platform.institution.domain.model.commands.RegisterAcademyCommand;
+import com.demy.platform.institution.domain.model.valueobjects.AcademyDescription;
+import com.demy.platform.institution.domain.model.valueobjects.AcademyName;
 import com.demy.platform.institution.domain.model.valueobjects.AdministratorId;
 import com.demy.platform.institution.domain.model.valueobjects.Ruc;
 import com.demy.platform.shared.domain.model.aggregates.AuditableAbstractAggregateRoot;
+import com.demy.platform.shared.domain.model.valueobjects.EmailAddress;
+import com.demy.platform.shared.domain.model.valueobjects.PhoneNumber;
+import com.demy.platform.shared.domain.model.valueobjects.StreetAddress;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import lombok.Getter;
@@ -26,6 +31,26 @@ public class Academy extends AuditableAbstractAggregateRoot<Academy> {
     @Embedded
     @Getter
     private AdministratorId administratorId;
+
+    @Embedded
+    @Getter
+    private AcademyName academyName;
+
+    @Embedded
+    @Getter
+    private AcademyDescription academyDescription;
+
+    @Embedded
+    @Getter
+    private StreetAddress streetAddress;
+
+    @Embedded
+    @Getter
+    private EmailAddress emailAddress;
+
+    @Embedded
+    @Getter
+    private PhoneNumber phoneNumber;
 
     @Embedded
     @Getter
