@@ -13,4 +13,9 @@ public record AcademyId(
     public AcademyId() {
         this(0L);
     }
+
+    public AcademyId {
+        if (academyId == null || academyId <= 0)
+            throw new IllegalArgumentException("Academy ID cannot be null or less than or equal to zero");
+    }
 }
