@@ -11,4 +11,11 @@ public record EmailAddress(
     public EmailAddress() {
         this("");
     }
+
+    public EmailAddress {
+        if (email == null || email.isBlank())
+            throw new IllegalArgumentException("Email address cannot be null or empty");
+        if (!email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$"))
+            throw new IllegalArgumentException("Invalid email address format");
+    }
 }
