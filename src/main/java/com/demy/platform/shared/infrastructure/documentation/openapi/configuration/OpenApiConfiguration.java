@@ -1,4 +1,4 @@
-package com.demy.platform.shared.domain.model.infrastructure.documentation.openapi.configuration;
+package com.demy.platform.shared.infrastructure.documentation.openapi.configuration;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
