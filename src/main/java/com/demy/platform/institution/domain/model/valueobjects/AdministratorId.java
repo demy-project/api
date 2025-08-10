@@ -18,8 +18,8 @@ import jakarta.validation.constraints.NotNull;
  */
 @Embeddable
 public record AdministratorId(
-        @NotNull
         @Column(nullable = false, unique = true)
+        @NotNull
         Long administratorId
 ) {
     /**
