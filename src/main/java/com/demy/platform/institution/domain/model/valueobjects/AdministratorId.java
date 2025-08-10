@@ -10,6 +10,10 @@ public record AdministratorId(
         @Column(nullable = false, unique = true)
         Long administratorId
 ) {
+    public AdministratorId() {
+        this(0L);
+    }
+
     public AdministratorId {
         if (administratorId == null || administratorId <= 0)
             throw new IllegalArgumentException("Administrator ID cannot be null or less than or equal to zero");
