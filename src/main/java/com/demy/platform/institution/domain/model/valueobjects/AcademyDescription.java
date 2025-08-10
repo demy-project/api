@@ -3,6 +3,16 @@ package com.demy.platform.institution.domain.model.valueobjects;
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotBlank;
 
+/**
+ * Value object representing the description of an academy.
+ * <p>
+ * Encapsulates the academy description ensuring it is not null or blank.
+ * Used as an embeddable in the persistence layer.
+ *
+ * @author Salim Ramirez
+ * @see IllegalArgumentException
+ * @since 1.0.0
+ */
 public record AcademyDescription(
         @Column(nullable = false)
         @NotBlank
@@ -14,5 +24,16 @@ public record AcademyDescription(
      */
     public AcademyDescription() {
         this("");
+    }
+
+    /**
+     * Constructs an AcademyDescription with the specified description.
+     *
+     * @param description the description of the academy
+     * @throws IllegalArgumentException if description is null or blank
+     */
+    public AcademyDescription {
+        if (description == null || description.isBlank())
+            throw new IllegalArgumentException("Academy description cannot be null or empty");
     }
 }
