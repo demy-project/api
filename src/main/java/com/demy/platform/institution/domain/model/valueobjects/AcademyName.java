@@ -19,7 +19,7 @@ import jakarta.validation.constraints.NotBlank;
 public record AcademyName(
         @Column(nullable = false, length = 80)
         @NotBlank
-        String academyName
+        String name
 ) {
     /**
      * Default constructor required by JPA.
@@ -32,13 +32,13 @@ public record AcademyName(
     /**
      * Constructs an AcademyName with the specified name.
      *
-     * @param academyName the name of the academy
+     * @param name the name of the academy
      * @throws IllegalArgumentException if academyName is null, blank, or exceeds 80 characters
      */
     public AcademyName {
-        if (academyName == null || academyName.isBlank())
+        if (name == null || name.isBlank())
             throw new IllegalArgumentException("Academy name cannot be null or empty");
-        if (academyName.length() > 80)
+        if (name.length() > 80)
             throw new IllegalArgumentException("Academy name cannot exceed 80 characters");
     }
 }
