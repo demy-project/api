@@ -1,0 +1,11 @@
+package com.demy.platform.shared.interfaces.rest.resources;
+
+/**
+ * Message Resource
+ * @summary
+ * A simple record to encapsulate a message.
+ *
+ * @since 1.0.0
+ */
+public record MessageResource(String message) {
+}
