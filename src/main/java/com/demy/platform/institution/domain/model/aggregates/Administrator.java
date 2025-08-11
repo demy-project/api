@@ -48,4 +48,14 @@ public class Administrator extends AuditableAbstractAggregateRoot<Administrator>
         this.dniNumber = dniNumber;
         this.academyId = academyId;
     }
+
+    public Administrator(RegisterAdministratorCommand command) {
+        this(
+                command.fullName(),
+                command.emailAddress(),
+                command.phoneNumber(),
+                command.dniNumber(),
+                command.academyId()
+        );
+    }
 }
