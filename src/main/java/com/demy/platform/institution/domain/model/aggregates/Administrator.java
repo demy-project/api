@@ -1,5 +1,6 @@
 package com.demy.platform.institution.domain.model.aggregates;
 
+import com.demy.platform.institution.domain.model.commands.RegisterAdministratorCommand;
 import com.demy.platform.shared.domain.model.aggregates.AuditableAbstractAggregateRoot;
 import com.demy.platform.shared.domain.model.valueobjects.*;
 import jakarta.persistence.Embedded;
@@ -33,4 +34,18 @@ public class Administrator extends AuditableAbstractAggregateRoot<Administrator>
      * Default constructor for JPA
      */
     protected Administrator() {}
+
+    public Administrator(
+            FullName fullName,
+            EmailAddress emailAddress,
+            PhoneNumber phoneNumber,
+            DniNumber dniNumber,
+            AcademyId academyId
+    ) {
+        this.fullName = fullName;
+        this.emailAddress = emailAddress;
+        this.phoneNumber = phoneNumber;
+        this.dniNumber = dniNumber;
+        this.academyId = academyId;
+    }
 }
