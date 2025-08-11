@@ -1,4 +1,4 @@
-package com.demy.platform.institution.domain.model.valueobjects;
+package com.demy.platform.institution.interfaces.rest.resources;
 
 public record AdministratorResource(
         Long id,

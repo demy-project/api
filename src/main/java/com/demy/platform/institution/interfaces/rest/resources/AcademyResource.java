@@ -1,7 +1,5 @@
 package com.demy.platform.institution.interfaces.rest.resources;
 
-import com.demy.platform.institution.domain.model.valueobjects.AdministratorResource;
-
 /**
  * Represents a resource for an Academy in the REST API.
  * <p>
