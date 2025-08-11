@@ -5,14 +5,13 @@ import jakarta.persistence.Embeddable;
 import jakarta.validation.constraints.NotBlank;
 
 /**
- * Full Name Value Object
- * Represents a person's full name with first and last names.
- * Enforces validation rules for non-blank, length, and space constraints.
+ * Value object representing a person's full name.
+ * <p>
+ * Encapsulates first and last names with validation rules
+ * ensuring they are non-blank, do not exceed 50 characters,
+ * and do not contain spaces.
  *
- * @summary
- * This value object is used to encapsulate a person's full name in a structured way,
- * ensuring that the first and last names are valid according to specified rules.
- *
+ * @author Salim Ramirez
  * @see IllegalArgumentException
  * @since 1.0.0
  */
@@ -27,18 +26,20 @@ public record FullName(
         String lastName
 ) {
     /**
-     * Default constructor for JPA
+     * Default constructor required by JPA.
+     * Initializes first and last names as empty strings.
      */
     public FullName() {
         this("", "");
     }
 
     /**
-     * Constructor with validation
+     * Constructs a FullName with validation.
      *
-     * @param firstName First name
-     * @param lastName Last name
-     * @throws IllegalArgumentException if first name or last name is null, blank, exceeds length, or contains spaces
+     * @param firstName the first name
+     * @param lastName the last name
+     * @throws IllegalArgumentException if firstName or lastName is null, blank,
+     *                                 exceeds 50 characters, or contains spaces
      */
     public FullName {
         if (firstName == null || firstName.isBlank())

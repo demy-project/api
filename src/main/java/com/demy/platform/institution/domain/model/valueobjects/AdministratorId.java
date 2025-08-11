@@ -5,14 +5,12 @@ import jakarta.persistence.Embeddable;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * AdministratorId Value Object
- * Represents the unique identifier for an administrator in the institution domain.
- * This class encapsulates the administrator's ID, ensuring it is not null and greater than zero.
+ * Value object representing the unique identifier of an administrator.
+ * <p>
+ * Encapsulates the administrator ID ensuring it is not null and greater than zero.
+ * Used as an embeddable in the persistence layer.
  *
- * @summary
- * Value object representing the unique identifier for an administrator in the institution domain.
- * This class is used to encapsulate the administrator's ID, ensuring it is not null and greater than zero.
- *
+ * @author Salim Ramirez
  * @see IllegalArgumentException
  * @since 1.0.0
  */
@@ -23,16 +21,17 @@ public record AdministratorId(
         Long administratorId
 ) {
     /**
-     * Default constructor for JPA
+     * Default constructor required by JPA.
+     * Initializes the administrator ID with a default value of 0.
      */
     public AdministratorId() {
         this(0L);
     }
 
     /**
-     * Constructor for AdministratorId
+     * Constructs an AdministratorId with the specified ID.
      *
-     * @param administratorId the unique identifier for the administrator
+     * @param administratorId the unique identifier of the administrator
      * @throws IllegalArgumentException if administratorId is null or less than or equal to zero
      */
     public AdministratorId {

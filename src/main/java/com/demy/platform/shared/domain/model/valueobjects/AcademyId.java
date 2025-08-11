@@ -5,14 +5,12 @@ import jakarta.persistence.Embeddable;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * AcademyId Value Object
- * Represents the unique identifier for an academy in the shared domain.
- * This class encapsulates the academy's ID, ensuring it is not null and greater than zero.
+ * Value object representing the unique identifier of an academy in the shared domain.
+ * <p>
+ * Encapsulates the academy ID ensuring it is not null and greater than zero.
+ * Used as an embeddable in the persistence layer.
  *
- * @summary
- * Value object representing the unique identifier for an academy in the shared domain.
- * This class is used to encapsulate the academy's ID, ensuring it is not null and greater than zero.
- *
+ * @author Salim Ramirez
  * @see IllegalArgumentException
  * @since 1.0.0
  */
@@ -23,14 +21,15 @@ public record AcademyId(
         Long academyId
 ) {
     /**
-     * Default constructor for JPA
+     * Default constructor required by JPA.
+     * Initializes the academy ID with a default value of 0.
      */
     public AcademyId() {
         this(0L);
     }
 
     /**
-     * Constructor for AcademyId
+     * Constructs an AcademyId with the specified ID.
      *
      * @param academyId the unique identifier for the academy
      * @throws IllegalArgumentException if academyId is null or less than or equal to zero
