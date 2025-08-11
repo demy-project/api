@@ -8,4 +8,7 @@ public record DniNumber(
         @Column(nullable = false, unique = true)
         String dniNumber
 ) {
+    public DniNumber() {
+        this("");
+    }
 }
