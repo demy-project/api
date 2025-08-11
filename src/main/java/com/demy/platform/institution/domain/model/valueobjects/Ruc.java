@@ -5,13 +5,13 @@ import jakarta.persistence.Embeddable;
 import jakarta.validation.constraints.NotBlank;
 
 /**
- * RUC (Registro Único de Contribuyentes) Value Object
- * Represents a unique taxpayer registration number in Peru.
- * Enforces validation rules for non-blank, length, and digit-only constraints.
+ * Value object representing the RUC (Registro Único de Contribuyentes),
+ * a unique taxpayer registration number in Peru.
+ * <p>
+ * Enforces validation rules ensuring the RUC is non-blank,
+ * exactly 11 digits long, and contains only numeric characters.
  *
- * @summary
- * Represents a RUC (Registro Único de Contribuyentes) value object with validation.
- *
+ * @author Salim Ramirez
  * @see IllegalArgumentException
  * @since 1.0.0
  */
@@ -22,16 +22,19 @@ public record Ruc(
         String ruc
 ) {
     /**
-     * Default constructor for JPA
+     * Default constructor required by JPA.
+     * Initializes the RUC with an empty string.
      */
     public Ruc() {
         this("");
     }
 
     /**
-     * Constructor with validation
-     * @param ruc RUC string
-     * @throws IllegalArgumentException if the RUC is invalid
+     * Constructs a RUC with validation.
+     *
+     * @param ruc the RUC string
+     * @throws IllegalArgumentException if the RUC is null, blank, not 11 characters long,
+     *                                  or contains non-digit characters
      */
     public Ruc {
         if (ruc == null || ruc.isBlank())
