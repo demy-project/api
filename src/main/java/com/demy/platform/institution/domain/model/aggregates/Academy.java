@@ -9,6 +9,8 @@ import com.demy.platform.shared.domain.model.aggregates.AuditableAbstractAggrega
 import com.demy.platform.shared.domain.model.valueobjects.EmailAddress;
 import com.demy.platform.shared.domain.model.valueobjects.PhoneNumber;
 import com.demy.platform.shared.domain.model.valueobjects.StreetAddress;
+import jakarta.persistence.AttributeOverride;
+import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import lombok.Getter;
@@ -28,6 +30,7 @@ import lombok.Getter;
 @Entity
 public class Academy extends AuditableAbstractAggregateRoot<Academy> {
 
+    // @AttributeOverride(name = "administrator_id", column = @Column(nullable = true))
     @Embedded
     @Getter
     private AdministratorId administratorId;
