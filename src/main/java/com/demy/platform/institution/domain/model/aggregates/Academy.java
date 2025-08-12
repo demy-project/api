@@ -65,6 +65,11 @@ public class Academy extends AuditableAbstractAggregateRoot<Academy> {
      * Constructs an Academy instance with the specified administrator ID and RUC.
      *
      * @param administratorId the ID of the administrator
+     * @param academyName the name of the academy
+     * @param academyDescription the description of the academy
+     * @param streetAddress the street address of the academy
+     * @param emailAddress the email address of the academy
+     * @param phoneNumber the phone number of the academy
      * @param ruc the RUC of the academy
      * @see AdministratorId
      * @see Ruc
