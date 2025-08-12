@@ -1,10 +1,11 @@
 package com.demy.platform.institution.interfaces.rest.resources;
 
-public record RegisterAdministratorResource(
+    public record RegisterAdministratorResource(
         String firstName,
         String lastName,
         String emailAddress,
-        String phoneNumber,
+        String countryCode,
+        String phone,
         String dniNumber,
         Long academyId
 ) {
@@ -15,7 +16,7 @@ public record RegisterAdministratorResource(
             throw new IllegalArgumentException("Last name is required");
         if (emailAddress == null || emailAddress.isBlank())
             throw new IllegalArgumentException("Email address is required");
-        if (phoneNumber == null || phoneNumber.isBlank())
+        if (phone == null || phone.isBlank())
             throw new IllegalArgumentException("Phone number is required");
         if (dniNumber == null || dniNumber.isBlank())
             throw new IllegalArgumentException("DNI number is required");
