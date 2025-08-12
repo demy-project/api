@@ -10,7 +10,6 @@ import java.util.Set;
  * @param id the unique identifier of the administrator
  * @param firstName the first name of the administrator
  * @param lastName the last name of the administrator
- * @param emailAddress the email address of the administrator
  * @param phoneNumber the phone number of the administrator
  * @param dniNumber the DNI number of the administrator
  * @param academyIds the set of academy IDs associated with the administrator
@@ -22,7 +21,6 @@ public record AdministratorResource(
         Long id,
         String firstName,
         String lastName,
-        String emailAddress,
         String phoneNumber,
         String dniNumber,
         Set<Long> academyIds
