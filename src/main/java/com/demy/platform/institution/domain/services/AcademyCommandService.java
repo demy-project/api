@@ -1,6 +1,9 @@
 package com.demy.platform.institution.domain.services;
 
+import com.demy.platform.institution.domain.model.aggregates.Academy;
 import com.demy.platform.institution.domain.model.commands.RegisterAcademyCommand;
+
+import java.util.Optional;
 
 /**
  * Service interface for handling commands related to the Academy aggregate.
@@ -18,5 +21,5 @@ public interface AcademyCommandService {
      * @param command the command containing the necessary data to register an academy
      * @return the identifier of the newly registered academy
      */
-    Long handle(RegisterAcademyCommand command);
+    Optional<Academy> handle(RegisterAcademyCommand command);
 }
