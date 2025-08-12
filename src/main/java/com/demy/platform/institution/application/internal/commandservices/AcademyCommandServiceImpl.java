@@ -6,6 +6,8 @@ import com.demy.platform.institution.domain.services.AcademyCommandService;
 import com.demy.platform.institution.infrastructure.persistence.jpa.repositories.AcademyRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 /**
  * Implementation of the {@link AcademyCommandService} interface for handling academy registration commands.
  * <p>
@@ -41,13 +43,15 @@ public class AcademyCommandServiceImpl implements AcademyCommandService {
      * @see RegisterAcademyCommand
      */
     @Override
-    public Long handle(RegisterAcademyCommand command) {
+    public Optional<Academy> handle(RegisterAcademyCommand command) {
+        if (academyRepository.existsByEmailAddress(command.emailAddress()))
+            throw new IllegalArgumentException("An academy with email %s already exists".formatted(command.emailAddress().email()));
         if (academyRepository.existsByRuc(command.ruc()))
             throw new IllegalArgumentException("An academy with RUC %s already exists".formatted(command.ruc().ruc()));
         var academy = new Academy(command);
         try {
             academyRepository.save(academy);
-            return academy.getId();
+            return Optional.of(academy);
         } catch (Exception e) {
             throw new RuntimeException("Failed to register academy: %s".formatted(e.getMessage()));
         }
