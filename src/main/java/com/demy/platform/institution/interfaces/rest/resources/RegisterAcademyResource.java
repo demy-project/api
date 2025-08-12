@@ -29,7 +29,8 @@ public record RegisterAcademyResource(
         String province,
         String department,
         String emailAddress,
-        String phoneNumber,
+        String countryCode,
+        String phone,
         String ruc
 ) {
     /**
@@ -54,7 +55,9 @@ public record RegisterAcademyResource(
             throw new IllegalArgumentException("Department is required");
         if (emailAddress == null || emailAddress.isBlank())
             throw new IllegalArgumentException("Email address is required");
-        if (phoneNumber == null || phoneNumber.isBlank())
+        if (countryCode == null || countryCode.isBlank())
+            throw new IllegalArgumentException("Country code is required");
+        if (phone == null || phone.isBlank())
             throw new IllegalArgumentException("Phone number is required");
         if (ruc == null || ruc.isBlank())
             throw new IllegalArgumentException("RUC is required");
