@@ -22,5 +22,7 @@ public record RegisterAdministratorCommand(
             throw new IllegalArgumentException("Dni number cannot be null");
         if (academyIds == null)
             throw new IllegalArgumentException("Academy IDs cannot be null");
+        if (academyIds.contains(null))
+            throw new IllegalArgumentException("Academy IDs cannot contain null values");
     }
 }
