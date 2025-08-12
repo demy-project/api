@@ -13,7 +13,8 @@ package com.demy.platform.institution.interfaces.rest.resources;
  * @param province          the province where the academy is located
  * @param department        the department where the academy is located
  * @param emailAddress     the email address of the academy
- * @param phoneNumber      the phone number of the academy
+ * @param countryCode       the country code of the academy's location
+ * @param phone             the phone number of the academy
  * @param ruc              the Registro Único de Contribuyentes (RUC) of the academy
  *
  * @author Salim Ramirez
