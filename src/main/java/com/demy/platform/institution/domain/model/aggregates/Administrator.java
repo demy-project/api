@@ -15,11 +15,7 @@ public class Administrator extends AuditableAbstractAggregateRoot<Administrator>
 
     @Embedded
     @Getter
-    private FullName fullName;
-
-    @Embedded
-    @Getter
-    private EmailAddress emailAddress;
+    private PersonName personName;
 
     @Embedded
     @Getter
@@ -34,7 +30,7 @@ public class Administrator extends AuditableAbstractAggregateRoot<Administrator>
             name = "administrator_academies",
             joinColumns = @JoinColumn(name = "administrator_id", referencedColumnName = "id")
     )
-    private Set<AcademyId> academyIds = new HashSet<>();
+    private Set<AcademyId> academyIds;
 
     /**
      * Default constructor for JPA
@@ -42,26 +38,21 @@ public class Administrator extends AuditableAbstractAggregateRoot<Administrator>
     protected Administrator() {}
 
     public Administrator(
-            FullName fullName,
-            EmailAddress emailAddress,
+            PersonName personName,
             PhoneNumber phoneNumber,
-            DniNumber dniNumber,
-            Set<AcademyId> academyIds
+            DniNumber dniNumber
     ) {
-        this.fullName = fullName;
-        this.emailAddress = emailAddress;
+        this.personName = personName;
         this.phoneNumber = phoneNumber;
         this.dniNumber = dniNumber;
-        this.academyIds = academyIds != null ? new HashSet<>(academyIds) : new HashSet<>();
+        this.academyIds = new HashSet<>();
     }
 
     public Administrator(RegisterAdministratorCommand command) {
         this(
-                command.fullName(),
-                command.emailAddress(),
+                command.personName(),
                 command.phoneNumber(),
-                command.dniNumber(),
-                command.academyIds()
+                command.dniNumber()
         );
     }
 
