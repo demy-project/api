@@ -2,12 +2,14 @@ package com.demy.platform.institution.domain.model.commands;
 
 import com.demy.platform.shared.domain.model.valueobjects.*;
 
+import java.util.Set;
+
 public record RegisterAdministratorCommand(
         FullName fullName,
         EmailAddress emailAddress,
         PhoneNumber phoneNumber,
         DniNumber dniNumber,
-        AcademyId academyId
+        Set<AcademyId> academyIds
 ) {
     public RegisterAdministratorCommand {
         if (fullName == null)
@@ -18,7 +20,7 @@ public record RegisterAdministratorCommand(
             throw new IllegalArgumentException("Phone number cannot be null");
         if (dniNumber == null)
             throw new IllegalArgumentException("Dni number cannot be null");
-        if (academyId == null)
-            throw new IllegalArgumentException("Academy ID cannot be null");
+        if (academyIds == null)
+            throw new IllegalArgumentException("Academy IDs cannot be null");
     }
 }
