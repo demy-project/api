@@ -6,6 +6,7 @@ import com.demy.platform.shared.domain.model.valueobjects.*;
 import jakarta.persistence.*;
 import lombok.Getter;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -62,5 +63,17 @@ public class Administrator extends AuditableAbstractAggregateRoot<Administrator>
                 command.dniNumber(),
                 command.academyIds()
         );
+    }
+
+    public void associateAcademy(AcademyId academyId) {
+        this.academyIds.add(academyId);
+    }
+
+    public void disassociateAcademy(AcademyId academyId) {
+        this.academyIds.remove(academyId);
+    }
+
+    public Set<AcademyId> getAcademyIds() {
+        return Collections.unmodifiableSet(academyIds);
     }
 }
