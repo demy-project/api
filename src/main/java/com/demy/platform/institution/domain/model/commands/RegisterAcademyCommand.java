@@ -31,19 +31,17 @@ public record RegisterAcademyCommand(
      * Constructs a RegisterAcademyCommand with validation.
      *
      * @param administratorId the identifier of the administrator
-     * @param ruc the RUC of the academy
      * @param academyName the name of the academy
      * @param academyDescription the description of the academy
      * @param streetAddress the street address of the academy
      * @param emailAddress the email address of the academy
      * @param phoneNumber the phone number of the academy
+     * @param ruc the RUC of the academy
      * @throws IllegalArgumentException if administratorId or ruc is null
      */
     public RegisterAcademyCommand {
         if (administratorId == null)
             throw new IllegalArgumentException("AdministratorId cannot be null");
-        if (ruc == null)
-            throw new IllegalArgumentException("Ruc cannot be null");
         if (academyName == null)
             throw new IllegalArgumentException("AcademyName cannot be null");
         if (academyDescription == null)
@@ -54,5 +52,7 @@ public record RegisterAcademyCommand(
             throw new IllegalArgumentException("EmailAddress cannot be null");
         if (phoneNumber == null)
             throw new IllegalArgumentException("PhoneNumber cannot be null");
+        if (ruc == null)
+            throw new IllegalArgumentException("Ruc cannot be null");
     }
 }
