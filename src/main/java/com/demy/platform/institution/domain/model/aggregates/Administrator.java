@@ -3,9 +3,11 @@ package com.demy.platform.institution.domain.model.aggregates;
 import com.demy.platform.institution.domain.model.commands.RegisterAdministratorCommand;
 import com.demy.platform.shared.domain.model.aggregates.AuditableAbstractAggregateRoot;
 import com.demy.platform.shared.domain.model.valueobjects.*;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 import lombok.Getter;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Administrator extends AuditableAbstractAggregateRoot<Administrator> {
@@ -26,9 +28,12 @@ public class Administrator extends AuditableAbstractAggregateRoot<Administrator>
     @Getter
     private DniNumber dniNumber;
 
-    @Embedded
-    @Getter
-    private AcademyId academyId;
+    @ElementCollection
+    @CollectionTable(
+            name = "administrator_academies",
+            joinColumns = @JoinColumn(name = "administrator_id", referencedColumnName = "id")
+    )
+    private Set<AcademyId> academyIds = new HashSet<>();
 
     /**
      * Default constructor for JPA
@@ -40,13 +45,13 @@ public class Administrator extends AuditableAbstractAggregateRoot<Administrator>
             EmailAddress emailAddress,
             PhoneNumber phoneNumber,
             DniNumber dniNumber,
-            AcademyId academyId
+            Set<AcademyId> academyIds
     ) {
         this.fullName = fullName;
         this.emailAddress = emailAddress;
         this.phoneNumber = phoneNumber;
         this.dniNumber = dniNumber;
-        this.academyId = academyId;
+        this.academyIds = academyIds != null ? new HashSet<>(academyIds) : new HashSet<>();
     }
 
     public Administrator(RegisterAdministratorCommand command) {
@@ -55,7 +60,7 @@ public class Administrator extends AuditableAbstractAggregateRoot<Administrator>
                 command.emailAddress(),
                 command.phoneNumber(),
                 command.dniNumber(),
-                command.academyId()
+                command.academyIds()
         );
     }
 }
