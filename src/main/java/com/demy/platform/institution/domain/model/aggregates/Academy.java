@@ -9,8 +9,6 @@ import com.demy.platform.shared.domain.model.aggregates.AuditableAbstractAggrega
 import com.demy.platform.shared.domain.model.valueobjects.EmailAddress;
 import com.demy.platform.shared.domain.model.valueobjects.PhoneNumber;
 import com.demy.platform.shared.domain.model.valueobjects.StreetAddress;
-import jakarta.persistence.AttributeOverride;
-import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import lombok.Getter;
@@ -30,7 +28,6 @@ import lombok.Getter;
 @Entity
 public class Academy extends AuditableAbstractAggregateRoot<Academy> {
 
-    // @AttributeOverride(name = "administrator_id", column = @Column(nullable = true))
     @Embedded
     @Getter
     private AdministratorId administratorId;
@@ -73,19 +70,19 @@ public class Academy extends AuditableAbstractAggregateRoot<Academy> {
      * @see Ruc
      */
     public Academy(AdministratorId administratorId,
-                   Ruc ruc,
                    AcademyName academyName,
                    AcademyDescription academyDescription,
                    StreetAddress streetAddress,
                    EmailAddress emailAddress,
-                   PhoneNumber phoneNumber) {
+                   PhoneNumber phoneNumber,
+                   Ruc ruc) {
         this.administratorId = administratorId;
-        this.ruc = ruc;
         this.academyName = academyName;
         this.academyDescription = academyDescription;
         this.streetAddress = streetAddress;
         this.emailAddress = emailAddress;
         this.phoneNumber = phoneNumber;
+        this.ruc = ruc;
     }
 
     /**
@@ -97,12 +94,12 @@ public class Academy extends AuditableAbstractAggregateRoot<Academy> {
     public Academy(RegisterAcademyCommand command) {
         this(
                 command.administratorId(),
-                command.ruc(),
                 command.academyName(),
                 command.academyDescription(),
                 command.streetAddress(),
                 command.emailAddress(),
-                command.phoneNumber()
+                command.phoneNumber(),
+                command.ruc()
         );
     }
 }
