@@ -2,9 +2,9 @@ package com.demy.platform.iam.application.internal.outboundservices.tokens;
 
 public interface TokenService {
 
-    String generateToken(String emailAddress);
+    String generateToken(String username);
 
-    String getEmailAddressFromToken(String token);
+    String getUsernameFromToken(String token);
 
     boolean validateToken(String token);
 }
