@@ -44,6 +44,7 @@ public class User extends AuditableAbstractAggregateRoot<User> {
         return this;
     }
 
+    @SuppressWarnings("UnusedReturnValue")
     public User addRoles(List<Role> roles) {
         var validateRoleSet = Role.validateRoleSet(roles);
         this.roles.addAll(validateRoleSet);
