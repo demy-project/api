@@ -6,6 +6,8 @@ import com.demy.platform.institution.domain.services.AdministratorCommandService
 import com.demy.platform.institution.infrastructure.persistence.jpa.repositories.AdministratorRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class AdministratorCommandServiceImpl implements AdministratorCommandService {
 
@@ -16,13 +18,13 @@ public class AdministratorCommandServiceImpl implements AdministratorCommandServ
     }
 
     @Override
-    public Long handle(RegisterAdministratorCommand command) {
+    public Optional<Administrator> handle(RegisterAdministratorCommand command) {
         if (administratorRepository.existsByDniNumber(command.dniNumber()))
             throw new IllegalArgumentException("An administrator with DNI %s already exists".formatted(command.dniNumber().dniNumber()));
         var administrator = new Administrator(command);
         try {
             administratorRepository.save(administrator);
-            return administrator.getId();
+            return Optional.of(administrator);
         } catch (Exception e) {
             throw new RuntimeException("Failed to register administrator: %s".formatted(e.getMessage()));
         }
