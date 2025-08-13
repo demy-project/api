@@ -1,20 +1,33 @@
 package com.demy.platform.iam.domain.model.aggregates;
 
+import com.demy.platform.iam.domain.model.entities.Role;
 import com.demy.platform.shared.domain.model.aggregates.AuditableAbstractAggregateRoot;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
+import com.demy.platform.shared.domain.model.valueobjects.EmailAddress;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.Set;
 
 @Getter
 @Setter
 @Entity
 public class User extends AuditableAbstractAggregateRoot<User> {
 
+    @Embedded
+    private EmailAddress emailAddress;
+
     @NotBlank
-    @Size(max = 50)
-    @Column(unique = true)
-    private String username;
+    @Size(max = 120)
+    private String password;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
+    private Set<Role> roles;
+
+    public User() {}
 }
