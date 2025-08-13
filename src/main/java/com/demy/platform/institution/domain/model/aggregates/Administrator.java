@@ -3,20 +3,19 @@ package com.demy.platform.institution.domain.model.aggregates;
 import com.demy.platform.institution.domain.model.commands.RegisterAdministratorCommand;
 import com.demy.platform.shared.domain.model.aggregates.AuditableAbstractAggregateRoot;
 import com.demy.platform.shared.domain.model.valueobjects.*;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 import lombok.Getter;
+
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Administrator extends AuditableAbstractAggregateRoot<Administrator> {
 
     @Embedded
     @Getter
-    private FullName fullName;
-
-    @Embedded
-    @Getter
-    private EmailAddress emailAddress;
+    private PersonName personName;
 
     @Embedded
     @Getter
@@ -26,9 +25,12 @@ public class Administrator extends AuditableAbstractAggregateRoot<Administrator>
     @Getter
     private DniNumber dniNumber;
 
-    @Embedded
-    @Getter
-    private AcademyId academyId;
+    @ElementCollection
+    @CollectionTable(
+            name = "administrator_academies",
+            joinColumns = @JoinColumn(name = "administrator_id", referencedColumnName = "id")
+    )
+    private Set<AcademyId> academyIds;
 
     /**
      * Default constructor for JPA
@@ -36,26 +38,33 @@ public class Administrator extends AuditableAbstractAggregateRoot<Administrator>
     protected Administrator() {}
 
     public Administrator(
-            FullName fullName,
-            EmailAddress emailAddress,
+            PersonName personName,
             PhoneNumber phoneNumber,
-            DniNumber dniNumber,
-            AcademyId academyId
+            DniNumber dniNumber
     ) {
-        this.fullName = fullName;
-        this.emailAddress = emailAddress;
+        this.personName = personName;
         this.phoneNumber = phoneNumber;
         this.dniNumber = dniNumber;
-        this.academyId = academyId;
+        this.academyIds = new HashSet<>();
     }
 
     public Administrator(RegisterAdministratorCommand command) {
         this(
-                command.fullName(),
-                command.emailAddress(),
+                command.personName(),
                 command.phoneNumber(),
-                command.dniNumber(),
-                command.academyId()
+                command.dniNumber()
         );
+    }
+
+    public void associateAcademy(AcademyId academyId) {
+        this.academyIds.add(academyId);
+    }
+
+    public void disassociateAcademy(AcademyId academyId) {
+        this.academyIds.remove(academyId);
+    }
+
+    public Set<AcademyId> getAcademyIds() {
+        return Collections.unmodifiableSet(academyIds);
     }
 }
