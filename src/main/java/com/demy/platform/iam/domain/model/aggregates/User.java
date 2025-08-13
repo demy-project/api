@@ -9,6 +9,8 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -30,4 +32,10 @@ public class User extends AuditableAbstractAggregateRoot<User> {
     private Set<Role> roles;
 
     public User() {}
+
+    public User(EmailAddress emailAddress, String password) {
+        this.emailAddress = emailAddress;
+        this.password = password;
+        this.roles = new HashSet<>();
+    }
 }
