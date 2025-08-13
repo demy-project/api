@@ -39,16 +39,16 @@ public class TokenServiceImpl implements BearerTokenService {
         return buildTokenWithDefaultParameters(authentication.getName());
     }
 
-    public String generateToken(String emailAddress) {
-        return buildTokenWithDefaultParameters(emailAddress);
+    public String generateToken(String username) {
+        return buildTokenWithDefaultParameters(username);
     }
 
-    private String buildTokenWithDefaultParameters(String emailAddress) {
+    private String buildTokenWithDefaultParameters(String username) {
         var issuedAt = new Date();
         var expiration = DateUtils.addDays(issuedAt, expirationDays);
         var key = getSigningKey();
         return Jwts.builder()
-                .subject(emailAddress)
+                .subject(username)
                 .issuedAt(issuedAt)
                 .expiration(expiration)
                 .signWith(key)
@@ -56,7 +56,7 @@ public class TokenServiceImpl implements BearerTokenService {
     }
 
     @Override
-    public String getEmailAddressFromToken(String token) {
+    public String getUsernameFromToken(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
