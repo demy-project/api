@@ -6,7 +6,7 @@ import org.springframework.security.core.Authentication;
 
 public interface BearerTokenService extends TokenService {
 
-    String getBearerToken(HttpServletRequest token);
+    String getBearerTokenFrom(HttpServletRequest token);
 
     String generateToken(Authentication authentication);
 }
