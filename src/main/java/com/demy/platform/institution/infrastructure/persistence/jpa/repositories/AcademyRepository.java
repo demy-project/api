@@ -2,6 +2,7 @@ package com.demy.platform.institution.infrastructure.persistence.jpa.repositorie
 
 import com.demy.platform.institution.domain.model.aggregates.Academy;
 import com.demy.platform.institution.domain.model.valueobjects.Ruc;
+import com.demy.platform.shared.domain.model.valueobjects.EmailAddress;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -17,6 +18,8 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface AcademyRepository extends JpaRepository<Academy, Long> {
+
+    boolean existsByEmailAddress(EmailAddress emailAddress);
 
     /**
      * Checks if an Academy exists by its RUC (Registro Único de Contribuyentes).

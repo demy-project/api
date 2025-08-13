@@ -16,7 +16,7 @@ import jakarta.validation.constraints.NotBlank;
  * @since 1.0.0
  */
 @Embeddable
-public record FullName(
+public record PersonName(
         @Column(nullable = false, length = 50)
         @NotBlank
         String firstName,
@@ -29,7 +29,7 @@ public record FullName(
      * Default constructor required by JPA.
      * Initializes first and last names as empty strings.
      */
-    public FullName() {
+    public PersonName() {
         this("", "");
     }
 
@@ -41,7 +41,7 @@ public record FullName(
      * @throws IllegalArgumentException if firstName or lastName is null, blank,
      *                                 exceeds 50 characters, or contains spaces
      */
-    public FullName {
+    public PersonName {
         if (firstName == null || firstName.isBlank())
             throw new IllegalArgumentException("First name cannot be null or blank");
         if (firstName.length() > 50)

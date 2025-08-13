@@ -13,7 +13,8 @@ package com.demy.platform.institution.interfaces.rest.resources;
  * @param province          the province where the academy is located
  * @param department        the department where the academy is located
  * @param emailAddress     the email address of the academy
- * @param phoneNumber      the phone number of the academy
+ * @param countryCode       the country code of the academy's location
+ * @param phone             the phone number of the academy
  * @param ruc              the Registro Único de Contribuyentes (RUC) of the academy
  *
  * @author Salim Ramirez
@@ -29,7 +30,8 @@ public record RegisterAcademyResource(
         String province,
         String department,
         String emailAddress,
-        String phoneNumber,
+        String countryCode,
+        String phone,
         String ruc
 ) {
     /**
@@ -54,7 +56,9 @@ public record RegisterAcademyResource(
             throw new IllegalArgumentException("Department is required");
         if (emailAddress == null || emailAddress.isBlank())
             throw new IllegalArgumentException("Email address is required");
-        if (phoneNumber == null || phoneNumber.isBlank())
+        if (countryCode == null || countryCode.isBlank())
+            throw new IllegalArgumentException("Country code is required");
+        if (phone == null || phone.isBlank())
             throw new IllegalArgumentException("Phone number is required");
         if (ruc == null || ruc.isBlank())
             throw new IllegalArgumentException("RUC is required");

@@ -19,7 +19,7 @@ public record PhoneNumber(
         String countryCode,
 
         @Column(nullable = false, length = 15)
-        String number
+        String phone
 ) {
     /**
      * Default constructor for JPA
@@ -33,7 +33,7 @@ public record PhoneNumber(
      * Constructs a PhoneNumber with the specified country code and number.
      *
      * @param countryCode the country code, must be non-null, non-empty, max 5 characters, digits only with optional leading +
-     * @param number      the local phone number, must be non-null, non-empty, max 15 characters, digits only (spaces and dashes allowed)
+     * @param phone       the local phone number, must be non-null, non-empty, max 15 characters, digits only (spaces and dashes allowed)
      * @throws IllegalArgumentException if any validation rules are violated
      */
     public PhoneNumber {
@@ -43,11 +43,11 @@ public record PhoneNumber(
             throw new IllegalArgumentException("Country code cannot be longer than 5 characters");
         if (!countryCode.matches("^\\+?\\d{1,5}$"))
             throw new IllegalArgumentException("Invalid country code");
-        if (number == null || number.isBlank())
+        if (phone == null || phone.isBlank())
             throw new IllegalArgumentException("Phone number cannot be null or empty");
-        if (number.length() > 15)
+        if (phone.length() > 15)
             throw new IllegalArgumentException("Phone number cannot be longer than 15 characters");
-        if (!number.replaceAll("[\\s\\-]", "").matches("^\\d{6,12}$"))
+        if (!phone.replaceAll("[\\s\\-]", "").matches("^\\d{6,12}$"))
             throw new IllegalArgumentException("Invalid local number");
     }
 
@@ -57,7 +57,7 @@ public record PhoneNumber(
      * @return the full phone number as a string
      */
     public String getFullNumber() {
-        return countryCode.replace("+", "") + number.replaceAll("[\\s\\-]", "");
+        return countryCode.replace("+", "") + phone.replaceAll("[\\s\\-]", "");
     }
 
     /**
@@ -66,6 +66,6 @@ public record PhoneNumber(
      * @return the formatted phone number as a string
      */
     public String getFormatted() {
-        return String.format("%s %s", countryCode, number);
+        return String.format("%s %s", countryCode, phone);
     }
 }
