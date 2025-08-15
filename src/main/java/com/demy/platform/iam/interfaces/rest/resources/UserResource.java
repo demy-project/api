@@ -5,6 +5,7 @@ import java.util.List;
 public record UserResource(
         Long id,
         String emailAddress,
-        List<String> roles
+        List<String> roles,
+        Long tenantId
 ) {
 }
