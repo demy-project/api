@@ -15,6 +15,9 @@ import java.util.stream.Collectors;
 @EqualsAndHashCode
 public class UserDetailsImpl implements UserDetails {
 
+    private final Long userId;
+    private final Long tenantId;
+
     private final String username;
     @JsonIgnore
     private final String password;
@@ -24,7 +27,9 @@ public class UserDetailsImpl implements UserDetails {
     private final boolean enabled;
     private final Collection<? extends GrantedAuthority> authorities;
 
-    public UserDetailsImpl(String username, String password, Collection<? extends GrantedAuthority> authorities) {
+    public UserDetailsImpl(Long userId, Long tenantId, String username, String password, Collection<? extends GrantedAuthority> authorities) {
+        this.userId = userId;
+        this.tenantId = tenantId;
         this.username = username;
         this.password = password;
         this.authorities = authorities;
@@ -40,6 +45,8 @@ public class UserDetailsImpl implements UserDetails {
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
         return new UserDetailsImpl(
+                user.getId(),
+                user.getTenantId().tenantId(),
                 user.getEmailAddress().email(),
                 user.getPassword(),
                 authorities);
