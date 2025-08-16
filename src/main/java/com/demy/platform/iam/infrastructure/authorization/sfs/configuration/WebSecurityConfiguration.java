@@ -1,6 +1,7 @@
 package com.demy.platform.iam.infrastructure.authorization.sfs.configuration;
 
 import com.demy.platform.iam.infrastructure.authorization.sfs.pipeline.BearerAuthorizationRequestFilter;
+import com.demy.platform.iam.infrastructure.authorization.sfs.pipeline.TenantContextCleanupFilter;
 import com.demy.platform.iam.infrastructure.hashing.bcrypt.BCryptHashingService;
 import com.demy.platform.iam.infrastructure.tokens.jwt.BearerTokenService;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -79,6 +80,7 @@ public class WebSecurityConfiguration {
                         .anyRequest().authenticated());
         http.authenticationProvider(authenticationProvider());
         http.addFilterBefore(authorizationRequestFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterAfter(new TenantContextCleanupFilter(), BearerAuthorizationRequestFilter.class);
         return http.build();
     }
 
