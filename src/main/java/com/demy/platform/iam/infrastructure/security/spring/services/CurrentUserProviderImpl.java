@@ -1,7 +1,7 @@
-package com.demy.platform.iam.infrastructure.security.services;
+package com.demy.platform.iam.infrastructure.security.spring.services;
 
 import com.demy.platform.iam.infrastructure.authorization.sfs.model.UserDetailsImpl;
-import com.demy.platform.iam.infrastructure.security.CurrentUserProvider;
+import com.demy.platform.iam.infrastructure.security.spring.SpringSecurityCurrentUserProvider;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
@@ -9,7 +9,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
-public class SpringSecurityCurrentUserProvider implements CurrentUserProvider {
+public class CurrentUserProviderImpl implements SpringSecurityCurrentUserProvider {
 
     @Override
     public Long getUserId() {
