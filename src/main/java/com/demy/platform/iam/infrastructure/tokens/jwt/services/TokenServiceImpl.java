@@ -65,6 +65,14 @@ public class TokenServiceImpl implements BearerTokenService {
         return extractClaim(token, Claims::getSubject);
     }
 
+    public Long getUserIdFromToken(String token) {
+        return extractClaim(token, claims -> claims.get("userId", Long.class));
+    }
+
+    public Long getTenantIdFromToken(String token) {
+        return extractClaim(token, claims -> claims.get("academyId", Long.class));
+    }
+
     @Override
     public boolean validateToken(String token) {
         try {
