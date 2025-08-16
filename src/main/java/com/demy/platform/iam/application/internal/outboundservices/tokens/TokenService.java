@@ -8,5 +8,9 @@ public interface TokenService {
 
     String getUsernameFromToken(String token);
 
+    Long getUserIdFromToken(String token);
+
+    Long getTenantIdFromToken(String token);
+
     boolean validateToken(String token);
 }
