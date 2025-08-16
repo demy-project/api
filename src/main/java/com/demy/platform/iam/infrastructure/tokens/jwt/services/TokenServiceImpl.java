@@ -36,19 +36,24 @@ public class TokenServiceImpl implements BearerTokenService {
 
     @Override
     public String generateToken(Authentication authentication) {
-        return buildTokenWithDefaultParameters(authentication.getName());
+        return buildTokenWithDefaultParameters(authentication.getName(), null);
     }
 
     public String generateToken(String username) {
-        return buildTokenWithDefaultParameters(username);
+        return buildTokenWithDefaultParameters(username, null);
     }
 
-    private String buildTokenWithDefaultParameters(String username) {
+    public String generateToken(String username, Long academyId) {
+        return buildTokenWithDefaultParameters(username, academyId);
+    }
+
+    private String buildTokenWithDefaultParameters(String username, Long academyId) {
         var issuedAt = new Date();
         var expiration = DateUtils.addDays(issuedAt, expirationDays);
         var key = getSigningKey();
         return Jwts.builder()
                 .subject(username)
+                .claim("academyId", academyId)
                 .issuedAt(issuedAt)
                 .expiration(expiration)
                 .signWith(key)
