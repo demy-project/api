@@ -2,6 +2,7 @@ package com.demy.platform.iam.infrastructure.authorization.sfs.pipeline;
 
 import com.demy.platform.iam.infrastructure.authorization.sfs.model.UsernamePasswordAuthenticationTokenBuilder;
 import com.demy.platform.iam.infrastructure.tokens.jwt.BearerTokenService;
+import com.demy.platform.shared.infrastructure.tenancy.TenantContext;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -36,6 +37,8 @@ public class BearerAuthorizationRequestFilter extends OncePerRequestFilter {
             LOGGER.info("Token: {}", token);
             if (token != null && tokenService.validateToken(token)) {
                 String username = tokenService.getUsernameFromToken(token);
+                Long tenantId = tokenService.getTenantIdFromToken(token);
+                TenantContext.setTenantId(tenantId);
                 var userDetails = userDetailsService.loadUserByUsername(username);
                 SecurityContextHolder.getContext().setAuthentication(UsernamePasswordAuthenticationTokenBuilder.build(userDetails, request));
             } else {
