@@ -37,8 +37,6 @@ public class BearerAuthorizationRequestFilter extends OncePerRequestFilter {
             LOGGER.info("Token: {}", token);
             if (token != null && tokenService.validateToken(token)) {
                 String username = tokenService.getUsernameFromToken(token);
-                Long tenantId = tokenService.getTenantIdFromToken(token);
-                TenantContext.setTenantId(tenantId);
                 var userDetails = userDetailsService.loadUserByUsername(username);
                 SecurityContextHolder.getContext().setAuthentication(UsernamePasswordAuthenticationTokenBuilder.build(userDetails, request));
             } else {
