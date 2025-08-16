@@ -8,5 +8,9 @@ public interface BearerTokenService extends TokenService {
 
     String getBearerTokenFrom(HttpServletRequest token);
 
+    Long getUserIdFromToken(String token);
+
+    Long getTenantIdFromToken(String token);
+
     String generateToken(Authentication authentication);
 }
