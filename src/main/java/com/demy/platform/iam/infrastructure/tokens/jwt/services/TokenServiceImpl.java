@@ -36,24 +36,19 @@ public class TokenServiceImpl implements BearerTokenService {
 
     @Override
     public String generateToken(Authentication authentication) {
-        return buildTokenWithDefaultParameters(authentication.getName(), null);
+        return buildTokenWithDefaultParameters(authentication.getName());
     }
 
     public String generateToken(String username) {
-        return buildTokenWithDefaultParameters(username, null);
+        return buildTokenWithDefaultParameters(username);
     }
 
-    public String generateToken(String username, Long academyId) {
-        return buildTokenWithDefaultParameters(username, academyId);
-    }
-
-    private String buildTokenWithDefaultParameters(String username, Long academyId) {
+    private String buildTokenWithDefaultParameters(String username) {
         var issuedAt = new Date();
         var expiration = DateUtils.addDays(issuedAt, expirationDays);
         var key = getSigningKey();
         return Jwts.builder()
                 .subject(username)
-                .claim("academyId", academyId)
                 .issuedAt(issuedAt)
                 .expiration(expiration)
                 .signWith(key)
@@ -65,12 +60,14 @@ public class TokenServiceImpl implements BearerTokenService {
         return extractClaim(token, Claims::getSubject);
     }
 
+    @Override
     public Long getUserIdFromToken(String token) {
         return extractClaim(token, claims -> claims.get("userId", Long.class));
     }
 
+    @Override
     public Long getTenantIdFromToken(String token) {
-        return extractClaim(token, claims -> claims.get("academyId", Long.class));
+        return extractClaim(token, claims -> claims.get("tenantId", Long.class));
     }
 
     @Override
