@@ -5,12 +5,14 @@ import com.demy.platform.iam.application.internal.outboundservices.tokens.TokenS
 import com.demy.platform.iam.domain.model.aggregates.User;
 import com.demy.platform.iam.domain.model.commands.SignInCommand;
 import com.demy.platform.iam.domain.model.commands.SignUpCommand;
+import com.demy.platform.iam.domain.model.valueobjects.Roles;
 import com.demy.platform.iam.domain.services.UserCommandService;
 import com.demy.platform.iam.infrastructure.persistence.jpa.repositories.RoleRepository;
 import com.demy.platform.iam.infrastructure.persistence.jpa.repositories.UserRepository;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -44,7 +46,11 @@ public class UserCommandServiceImpl implements UserCommandService {
     public Optional<User> handle(SignUpCommand command) {
         if (userRepository.existsByEmailAddress(command.emailAddress()))
             throw new RuntimeException("Username already exists");
-        var roles = command.roles().stream().map(role -> roleRepository.findByName(role.getName()).orElseThrow(() -> new RuntimeException("Role name not found"))).toList();
+        var roles = (command.roles() == null || command.roles().isEmpty())
+                ? List.of(roleRepository.findByName(Roles.ROLE_USER).orElseThrow(() -> new RuntimeException("Default role not found")))
+                : command.roles().stream()
+                .map(role -> roleRepository.findByName(role.getName()).orElseThrow(() -> new RuntimeException("Role name not found")))
+                .toList();
         var user = new User(command.emailAddress(), hashingService.encode(command.password()), roles);
         user.registerSignUpUser(roles);
         userRepository.save(user);
