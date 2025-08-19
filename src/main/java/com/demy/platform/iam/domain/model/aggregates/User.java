@@ -1,6 +1,7 @@
 package com.demy.platform.iam.domain.model.aggregates;
 
 import com.demy.platform.iam.domain.model.entities.Role;
+import com.demy.platform.iam.domain.model.events.UserSignedUpEvent;
 import com.demy.platform.iam.domain.model.valueobjects.TenantId;
 import com.demy.platform.shared.domain.model.aggregates.AuditableAbstractAggregateRoot;
 import com.demy.platform.shared.domain.model.valueobjects.EmailAddress;
@@ -59,6 +60,10 @@ public class User extends AuditableAbstractAggregateRoot<User> {
         var validateRoleSet = Role.validateRoleSet(roles);
         this.roles.addAll(validateRoleSet);
         return this;
+    }
+
+    public void registerSignUpUser(List<Role> roles) {
+        this.addDomainEvent(new UserSignedUpEvent(this, this.getId(), roles));
     }
 
     public Long getTenantIdOrNull() {
