@@ -40,19 +40,24 @@ public class Administrator extends AuditableAbstractAggregateRoot<Administrator>
     public Administrator(
             PersonName personName,
             PhoneNumber phoneNumber,
-            DniNumber dniNumber
+            DniNumber dniNumber,
+            AcademyId academyId,
+            UserId userId
     ) {
         this.personName = personName;
         this.phoneNumber = phoneNumber;
         this.dniNumber = dniNumber;
-        this.academyId = new AcademyId();
+        this.academyId = academyId;
+        this.userId = userId;
     }
 
     public Administrator(RegisterAdministratorCommand command) {
         this(
                 command.personName(),
                 command.phoneNumber(),
-                command.dniNumber()
+                command.dniNumber(),
+                command.academyId(),
+                command.userId()
         );
     }
 
