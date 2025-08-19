@@ -12,7 +12,7 @@ import java.util.Set;
  * @param lastName the last name of the administrator
  * @param phoneNumber the phone number of the administrator
  * @param dniNumber the DNI number of the administrator
- * @param academyIds the set of academy IDs associated with the administrator
+ * @param academyId the academy ID associated with the administrator
  *
  * @author Salim Ramirez
  * @since 1.0.0
@@ -23,6 +23,6 @@ public record AdministratorResource(
         String lastName,
         String phoneNumber,
         String dniNumber,
-        Set<Long> academyIds
+        Long academyId
 ) {
 }
