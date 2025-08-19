@@ -5,7 +5,6 @@ package com.demy.platform.institution.interfaces.rest.resources;
  * <p>
  * This record is used to transfer data required to register a new Academy.
  *
- * @param administratorId    the unique identifier of the administrator registering the academy
  * @param academyName       the name of the academy
  * @param academyDescription a description of the academy
  * @param street            the street address of the academy
@@ -22,7 +21,6 @@ package com.demy.platform.institution.interfaces.rest.resources;
  * @since 1.0.0
  */
 public record RegisterAcademyResource(
-        Long administratorId,
         String academyName,
         String academyDescription,
         String street,
@@ -40,8 +38,6 @@ public record RegisterAcademyResource(
      * @throws IllegalArgumentException if any required field is null or invalid
      */
     public RegisterAcademyResource {
-        if (administratorId == null || administratorId <= 0)
-            throw new IllegalArgumentException("Administrator ID is required");
         if (academyName == null || academyName.isBlank())
             throw new IllegalArgumentException("Academy name is required");
         if (academyDescription == null || academyDescription.isBlank())
