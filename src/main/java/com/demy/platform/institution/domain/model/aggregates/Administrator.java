@@ -1,14 +1,13 @@
 package com.demy.platform.institution.domain.model.aggregates;
 
 import com.demy.platform.institution.domain.model.commands.RegisterAdministratorCommand;
+import com.demy.platform.institution.domain.model.valueobjects.UserId;
 import com.demy.platform.shared.domain.model.aggregates.AuditableAbstractAggregateRoot;
 import com.demy.platform.shared.domain.model.valueobjects.*;
-import jakarta.persistence.*;
-import lombok.Getter;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import lombok.Getter;
 
 @Entity
 public class Administrator extends AuditableAbstractAggregateRoot<Administrator> {
@@ -25,12 +24,13 @@ public class Administrator extends AuditableAbstractAggregateRoot<Administrator>
     @Getter
     private DniNumber dniNumber;
 
-    @ElementCollection
-    @CollectionTable(
-            name = "administrator_academies",
-            joinColumns = @JoinColumn(name = "administrator_id", referencedColumnName = "id")
-    )
-    private Set<AcademyId> academyIds;
+    @Embedded
+    @Getter
+    private AcademyId academyId;
+
+    @Embedded
+    @Getter
+    private UserId userId;
 
     /**
      * Default constructor for JPA
@@ -45,7 +45,7 @@ public class Administrator extends AuditableAbstractAggregateRoot<Administrator>
         this.personName = personName;
         this.phoneNumber = phoneNumber;
         this.dniNumber = dniNumber;
-        this.academyIds = new HashSet<>();
+        this.academyId = new AcademyId();
     }
 
     public Administrator(RegisterAdministratorCommand command) {
@@ -57,14 +57,18 @@ public class Administrator extends AuditableAbstractAggregateRoot<Administrator>
     }
 
     public void associateAcademy(AcademyId academyId) {
-        this.academyIds.add(academyId);
+        if (this.academyId == null || this.academyId.academyId() == null || this.academyId.academyId() == 0L) {
+            this.academyId = academyId;
+        } else {
+            throw new IllegalStateException("Administrator is already associated with an academy.");
+        }
     }
 
     public void disassociateAcademy(AcademyId academyId) {
-        this.academyIds.remove(academyId);
-    }
-
-    public Set<AcademyId> getAcademyIds() {
-        return Collections.unmodifiableSet(academyIds);
+        if (this.academyId != null && this.academyId.equals(academyId)) {
+            this.academyId = new AcademyId();
+        } else {
+            throw new IllegalStateException("Administrator is not associated with the specified academy.");
+        }
     }
 }
