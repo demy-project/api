@@ -1,6 +1,7 @@
 package com.demy.platform.institution.domain.services;
 
 import com.demy.platform.institution.domain.model.aggregates.Academy;
+import com.demy.platform.institution.domain.model.commands.AssignAdministratorToAcademyCommand;
 import com.demy.platform.institution.domain.model.commands.RegisterAcademyCommand;
 
 import java.util.Optional;
@@ -22,4 +23,6 @@ public interface AcademyCommandService {
      * @return the identifier of the newly registered academy
      */
     Optional<Academy> handle(RegisterAcademyCommand command);
+
+    void handle(AssignAdministratorToAcademyCommand command);
 }
