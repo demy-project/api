@@ -1,6 +1,7 @@
 package com.demy.platform.institution.application.internal.commandservices;
 
 import com.demy.platform.institution.domain.model.aggregates.Academy;
+import com.demy.platform.institution.domain.model.commands.AssignAdministratorToAcademyCommand;
 import com.demy.platform.institution.domain.model.commands.RegisterAcademyCommand;
 import com.demy.platform.institution.domain.services.AcademyCommandService;
 import com.demy.platform.institution.infrastructure.persistence.jpa.repositories.AcademyRepository;
@@ -55,5 +56,14 @@ public class AcademyCommandServiceImpl implements AcademyCommandService {
         } catch (Exception e) {
             throw new RuntimeException("Failed to register academy: %s".formatted(e.getMessage()));
         }
+    }
+
+    @Override
+    public void handle(AssignAdministratorToAcademyCommand command) {
+        academyRepository.findById(command.academyId().academyId()).map(academy -> {
+            academy.assignAdministrator(command.administratorId());
+            academyRepository.save(academy);
+            return academy;
+        }).orElseThrow(() -> new IllegalArgumentException("No academy found with id " + command.academyId().academyId()));
     }
 }
