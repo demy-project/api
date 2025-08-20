@@ -24,12 +24,12 @@ public class AdministratorCommandServiceImpl implements AdministratorCommandServ
     public Optional<Administrator> handle(RegisterAdministratorCommand command) {
         if (administratorRepository.existsByDniNumber(command.dniNumber()))
             throw new IllegalArgumentException("An administrator with DNI %s already exists".formatted(command.dniNumber().dniNumber()));
-        var administrator = new Administrator(command);
-        var academy = academyRepository.findById(command.academyId().academyId())
-                .orElseThrow(() -> new IllegalArgumentException("No academy found with id " + command.academyId().academyId()));
         try {
-            academy.assignAdministrator(administrator.getId());
+            var administrator = new Administrator(command);
             administratorRepository.save(administrator);
+            var academy = academyRepository.findById(command.academyId().academyId())
+                    .orElseThrow(() -> new IllegalArgumentException("No academy found with id " + command.academyId().academyId()));
+            academy.assignAdministrator(administrator.getId());
             academyRepository.save(academy);
             return Optional.of(administrator);
         } catch (Exception e) {
