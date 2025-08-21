@@ -1,6 +1,7 @@
 package com.demy.platform.iam.domain.services;
 
 import com.demy.platform.iam.domain.model.aggregates.User;
+import com.demy.platform.iam.domain.model.commands.AssignUserTenantId;
 import com.demy.platform.iam.domain.model.commands.SignInCommand;
 import com.demy.platform.iam.domain.model.commands.SignUpCommand;
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -12,4 +13,6 @@ public interface UserCommandService {
     Optional<ImmutablePair<User, String>> handle(SignInCommand command);
 
     Optional<User> handle(SignUpCommand command);
+
+    void handle(AssignUserTenantId command);
 }
