@@ -7,6 +7,7 @@ import com.demy.platform.institution.domain.services.AdministratorCommandService
 import com.demy.platform.institution.infrastructure.persistence.jpa.repositories.AcademyRepository;
 import com.demy.platform.institution.infrastructure.persistence.jpa.repositories.AdministratorRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -22,11 +23,13 @@ public class AdministratorCommandServiceImpl implements AdministratorCommandServ
     }
 
     @Override
+    @Transactional
     public Optional<Administrator> handle(RegisterAdministratorCommand command) {
         if (administratorRepository.existsByDniNumber(command.dniNumber()))
             throw new IllegalArgumentException("An administrator with DNI %s already exists".formatted(command.dniNumber().dniNumber()));
         try {
             var administrator = new Administrator(command);
+            administrator.registerAdministrator(command.academyId().academyId(), command.userId().userId());
             administratorRepository.save(administrator);
             var academy = academyRepository.findById(command.academyId().academyId())
                     .orElseThrow(() -> new IllegalArgumentException("No academy found with id " + command.academyId().academyId()));
