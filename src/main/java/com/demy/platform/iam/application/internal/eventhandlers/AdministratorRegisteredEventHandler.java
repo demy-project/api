@@ -1,5 +1,6 @@
 package com.demy.platform.iam.application.internal.eventhandlers;
 
+import com.demy.platform.iam.domain.exceptions.TenantAssignmentException;
 import com.demy.platform.iam.domain.model.commands.AssignUserTenantId;
 import com.demy.platform.iam.domain.services.UserCommandService;
 import com.demy.platform.institution.domain.model.events.AdministratorRegisteredEvent;
@@ -20,8 +21,10 @@ public class AdministratorRegisteredEventHandler {
 
     @EventListener
     public void on(AdministratorRegisteredEvent event) {
+        var tenantId = event.getAcademyId();
+        if (tenantId == null) throw new TenantAssignmentException(event.toString());
         LOGGER.info("Handling AdministratorRegisteredEvent for User ID: {}, Academy ID: {}", event.getUserId(), event.getAcademyId());
-        var assignUserTenantIdCommand = new AssignUserTenantId(event.getUserId(), event.getAcademyId());
+        var assignUserTenantIdCommand = new AssignUserTenantId(event.getUserId(), tenantId);
         LOGGER.info("Assigning Tenant ID: {} to User ID: {}", event.getAcademyId(), event.getUserId());
         try {
             userCommandService.handle(assignUserTenantIdCommand);
