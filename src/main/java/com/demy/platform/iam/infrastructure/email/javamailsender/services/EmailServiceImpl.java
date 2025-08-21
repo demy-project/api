@@ -1,6 +1,6 @@
 package com.demy.platform.iam.infrastructure.email.javamailsender.services;
 
-import com.demy.platform.iam.infrastructure.email.javamailsender.HtmlEmailService;
+import com.demy.platform.iam.infrastructure.email.javamailsender.TemplateEmailService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -12,7 +12,7 @@ import org.thymeleaf.context.Context;
 import java.util.Map;
 
 @Service
-public class EmailServiceImpl implements HtmlEmailService {
+public class EmailServiceImpl implements TemplateEmailService {
 
     private final JavaMailSender mailSender;
     private final TemplateEngine templateEngine;
