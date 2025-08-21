@@ -1,19 +1,17 @@
 package com.demy.platform.institution.domain.model.events;
 
-import com.demy.platform.shared.domain.model.valueobjects.AcademyId;
-import com.demy.platform.shared.domain.model.valueobjects.DniNumber;
 import lombok.Getter;
 import org.springframework.context.ApplicationEvent;
 
 @Getter
 public class AdministratorRegisteredEvent extends ApplicationEvent {
 
-    private final AcademyId academyId;
-    private final DniNumber dniNumber;
+    private final Long academyId;
+    private final Long userId;
 
-    public AdministratorRegisteredEvent(Object source, AcademyId academyId, DniNumber dniNumber) {
+    public AdministratorRegisteredEvent(Object source, Long academyId, Long userId) {
         super(source);
         this.academyId = academyId;
-        this.dniNumber = dniNumber;
+        this.userId = userId;
     }
 }
