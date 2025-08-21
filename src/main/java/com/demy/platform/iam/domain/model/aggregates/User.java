@@ -71,18 +71,15 @@ public class User extends AuditableAbstractAggregateRoot<User> {
     }
 
     public void associateTenant(TenantId tenantId) {
-        if (this.tenantId == null) {
-            this.tenantId = tenantId;
-        } else {
+        if (this.tenantId != null && this.tenantId.isAssigned())
             throw new IllegalStateException("User is already associated with a tenant");
-        }
+        this.tenantId = tenantId;
     }
 
     public void disassociateTenant(TenantId tenantId) {
-        if (this.tenantId != null && this.tenantId.equals(tenantId)) {
-            this.tenantId = null;
-        } else {
-            throw new IllegalStateException("User is not associated with the specified tenant");
+        if (this.tenantId == null || !this.tenantId.equals(tenantId)) {
+            throw new IllegalStateException("User is not associated with the provided tenant");
         }
+        this.tenantId = new TenantId();
     }
 }
