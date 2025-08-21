@@ -11,8 +11,10 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 @Getter
@@ -32,6 +34,12 @@ public class User extends AuditableAbstractAggregateRoot<User> {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
+
+    private boolean verified = false;
+
+    private String verificationCode;
+
+    private LocalDateTime verificationCodeExpiresAt;
 
     @Embedded
     private TenantId tenantId;
@@ -62,8 +70,24 @@ public class User extends AuditableAbstractAggregateRoot<User> {
         return this;
     }
 
-    public void registerSignUpUser(List<Role> roles) {
-        this.addDomainEvent(new UserSignedUpEvent(this, this.getId(), roles));
+    public void generateVerificationCode(int expirationMinutes) {
+        this.verificationCode = String.format("%06d", new Random().nextInt(999999));
+        this.verificationCodeExpiresAt = LocalDateTime.now().plusMinutes(expirationMinutes);
+    }
+
+    public boolean verifyCode(String code) {
+        if (verificationCode == null || verificationCodeExpiresAt == null) return false;
+        if (LocalDateTime.now().isAfter(verificationCodeExpiresAt)) return false;
+        if (!verificationCode.equals(code)) return false;
+
+        this.verified = true;
+        this.verificationCode = null;
+        this.verificationCodeExpiresAt = null;
+        return true;
+    }
+
+    public void registerSignUpUser(User user, List<Role> roles) {
+        this.addDomainEvent(new UserSignedUpEvent(this, user, roles));
     }
 
     public Long getTenantIdOrNull() {
