@@ -25,20 +25,26 @@ public class EmailServiceImpl implements HtmlEmailService {
     @Override
     public void sendEmail(String to, String subject, String templateName, Map<String, Object> variables) {
         try {
-            Context context = new Context();
-            context.setVariables(variables);
-
-            String htmlContent = templateEngine.process(templateName, context);
-
-            MimeMessage message = mailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message, true);
-            helper.setTo(to);
-            helper.setSubject(subject);
-            helper.setText(htmlContent, true);
-
+            String htmlContent = processTemplate(templateName, variables);
+            MimeMessage message = createMimeMessage(to, subject, htmlContent);
             mailSender.send(message);
         } catch (MessagingException e) {
-            throw new RuntimeException("Error sending email", e);
+            throw new RuntimeException("Error sending email to %s: ".formatted(to), e);
         }
+    }
+
+    private String processTemplate(String templateName, Map<String, Object> variables) {
+        Context context = new Context();
+        context.setVariables(variables);
+        return templateEngine.process(templateName, context);
+    }
+
+    private MimeMessage createMimeMessage(String to, String subject, String htmlContent) throws MessagingException {
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+        helper.setTo(to);
+        helper.setSubject(subject);
+        helper.setText(htmlContent, true);
+        return message;
     }
 }
