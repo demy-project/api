@@ -2,10 +2,13 @@ package com.demy.platform.iam.application.internal.commandservices;
 
 import com.demy.platform.iam.application.internal.outboundservices.hashing.HashingService;
 import com.demy.platform.iam.application.internal.outboundservices.tokens.TokenService;
+import com.demy.platform.iam.domain.exceptions.UserNotFoundException;
 import com.demy.platform.iam.domain.model.aggregates.User;
+import com.demy.platform.iam.domain.model.commands.AssignUserTenantId;
 import com.demy.platform.iam.domain.model.commands.SignInCommand;
 import com.demy.platform.iam.domain.model.commands.SignUpCommand;
 import com.demy.platform.iam.domain.model.valueobjects.Roles;
+import com.demy.platform.iam.domain.model.valueobjects.TenantId;
 import com.demy.platform.iam.domain.services.UserCommandService;
 import com.demy.platform.iam.infrastructure.persistence.jpa.repositories.RoleRepository;
 import com.demy.platform.iam.infrastructure.persistence.jpa.repositories.UserRepository;
@@ -55,5 +58,17 @@ public class UserCommandServiceImpl implements UserCommandService {
         user.registerSignUpUser(roles);
         userRepository.save(user);
         return userRepository.findByEmailAddress(command.emailAddress());
+    }
+
+    @Override
+    public void handle(AssignUserTenantId command) {
+        var user = userRepository.findById(command.userId())
+                .orElseThrow(() -> new UserNotFoundException(command.userId()));
+        try {
+            user.associateTenant(new TenantId(command.tenantId()));
+            userRepository.save(user);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to assign tenant to user: %s".formatted(e.getMessage()));
+        }
     }
 }
