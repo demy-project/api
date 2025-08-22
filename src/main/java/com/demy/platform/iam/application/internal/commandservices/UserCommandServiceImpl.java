@@ -1,20 +1,22 @@
 package com.demy.platform.iam.application.internal.commandservices;
 
 import com.demy.platform.iam.application.internal.outboundservices.hashing.HashingService;
+import com.demy.platform.iam.application.internal.outboundservices.verification.VerificationService;
 import com.demy.platform.iam.application.internal.outboundservices.tokens.TokenService;
 import com.demy.platform.iam.domain.exceptions.UserNotFoundException;
 import com.demy.platform.iam.domain.model.aggregates.User;
-import com.demy.platform.iam.domain.model.commands.AssignUserTenantId;
-import com.demy.platform.iam.domain.model.commands.SignInCommand;
-import com.demy.platform.iam.domain.model.commands.SignUpCommand;
+import com.demy.platform.iam.domain.model.commands.*;
 import com.demy.platform.iam.domain.model.valueobjects.Roles;
 import com.demy.platform.iam.domain.model.valueobjects.TenantId;
+import com.demy.platform.iam.domain.model.valueobjects.VerificationCode;
 import com.demy.platform.iam.domain.services.UserCommandService;
 import com.demy.platform.iam.infrastructure.persistence.jpa.repositories.RoleRepository;
 import com.demy.platform.iam.infrastructure.persistence.jpa.repositories.UserRepository;
+import com.demy.platform.shared.domain.model.valueobjects.EmailAddress;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,13 +26,21 @@ public class UserCommandServiceImpl implements UserCommandService {
     private final UserRepository userRepository;
     private final HashingService hashingService;
     private final TokenService tokenService;
+    private final VerificationService verificationService;
 
     private final RoleRepository roleRepository;
 
-    public UserCommandServiceImpl(UserRepository userRepository, HashingService hashingService, TokenService tokenService, RoleRepository roleRepository) {
+    public UserCommandServiceImpl(
+            UserRepository userRepository,
+            HashingService hashingService,
+            TokenService tokenService,
+            VerificationService verificationService,
+            RoleRepository roleRepository
+    ) {
         this.userRepository = userRepository;
         this.hashingService = hashingService;
         this.tokenService = tokenService;
+        this.verificationService = verificationService;
         this.roleRepository = roleRepository;
     }
 
@@ -54,10 +64,32 @@ public class UserCommandServiceImpl implements UserCommandService {
                 : command.roles().stream()
                 .map(role -> roleRepository.findByName(role.getName()).orElseThrow(() -> new RuntimeException("Role name not found")))
                 .toList();
-        var user = new User(command.emailAddress(), hashingService.encode(command.password()), roles);
-        user.registerSignUpUser(roles);
+        var code = verificationService.generateCode();
+        var expirationMinutes = verificationService.generateExpirationMinutes();
+        var verificationCode = new VerificationCode(code, LocalDateTime.now().plusMinutes(expirationMinutes));
+        var user = new User(command.emailAddress(), hashingService.encode(command.password()), verificationCode, roles);
+        user.assignVerificationCode(command.emailAddress().email(), code, expirationMinutes);
         userRepository.save(user);
         return userRepository.findByEmailAddress(command.emailAddress());
+    }
+
+    @Override
+    public boolean handle(VerifyUserCommand command) {
+        var user = userRepository.findByEmailAddress(new EmailAddress(command.email()))
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        user.verifyUser(command.code());
+        userRepository.save(user);
+        return true;
+    }
+
+    @Override
+    public boolean handle(ResendVerificationCodeCommand command) {
+        var user = userRepository.findByEmailAddress(new EmailAddress(command.email()))
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        if (user.isVerified()) throw new RuntimeException("User is already verified");
+        user.assignVerificationCode(command.email(), verificationService.generateCode(), verificationService.generateExpirationMinutes());
+        userRepository.save(user);
+        return true;
     }
 
     @Override
