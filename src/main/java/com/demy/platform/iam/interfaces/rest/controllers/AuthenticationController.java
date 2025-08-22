@@ -1,14 +1,9 @@
 package com.demy.platform.iam.interfaces.rest.controllers;
 
 import com.demy.platform.iam.domain.services.UserCommandService;
-import com.demy.platform.iam.interfaces.rest.resources.AuthenticatedUserResource;
-import com.demy.platform.iam.interfaces.rest.resources.SignInResource;
-import com.demy.platform.iam.interfaces.rest.resources.SignUpResource;
-import com.demy.platform.iam.interfaces.rest.resources.UserResource;
-import com.demy.platform.iam.interfaces.rest.transform.AuthenticatedUserResourceFromEntityAssembler;
-import com.demy.platform.iam.interfaces.rest.transform.SignInCommandFromResourceAssembler;
-import com.demy.platform.iam.interfaces.rest.transform.SignUpCommandFromResourceAssembler;
-import com.demy.platform.iam.interfaces.rest.transform.UserResourceFromEntityAssembler;
+import com.demy.platform.iam.interfaces.rest.resources.*;
+import com.demy.platform.iam.interfaces.rest.transform.*;
+import com.demy.platform.shared.interfaces.rest.resources.MessageResource;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -60,5 +55,19 @@ public class AuthenticationController {
         }
         var userResource = UserResourceFromEntityAssembler.toResourceFromEntity(user.get());
         return new ResponseEntity<>(userResource, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/verify")
+    public ResponseEntity<MessageResource> verify(@RequestBody VerifyUserResource verifyUserResource) {
+        var verifyUserCommand = VerifyUserCommandFromResourceAssembler.toCommandFromResource(verifyUserResource);
+        userCommandService.handle(verifyUserCommand);
+        return ResponseEntity.ok(new MessageResource("User verified successfully!"));
+    }
+
+    @PostMapping("/resend-code")
+    public ResponseEntity<MessageResource> resendCode(@RequestBody ResendVerificationCodeResource resendVerificationCodeResource) {
+        var resendVerificationCodeCommand = ResendVerificationCodeCommandFromResourceAssembler.toCommandFromResource(resendVerificationCodeResource);
+        userCommandService.handle(resendVerificationCodeCommand);
+        return ResponseEntity.ok(new MessageResource("Verification code resent successfully!"));
     }
 }
