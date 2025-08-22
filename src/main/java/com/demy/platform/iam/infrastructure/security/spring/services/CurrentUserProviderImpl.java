@@ -5,6 +5,7 @@ import com.demy.platform.iam.infrastructure.security.spring.SpringSecurityCurren
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -39,6 +40,15 @@ public class CurrentUserProviderImpl implements SpringSecurityCurrentUserProvide
     public Long getTenantId() {
         var principal = (UserDetailsImpl) SecurityContextHolder.getContext()
                 .getAuthentication().getPrincipal();
-        return principal.getTenantId();
+        var tenantId = principal.getTenantId();
+        if (tenantId == null)
+            throw new IllegalStateException("Tenant ID is not set for the current user");
+        return tenantId;
+    }
+
+    public Optional<Long> getOptionalTenantId() {
+        var principal = (UserDetailsImpl) SecurityContextHolder.getContext()
+                .getAuthentication().getPrincipal();
+        return Optional.ofNullable(principal.getTenantId());
     }
 }
