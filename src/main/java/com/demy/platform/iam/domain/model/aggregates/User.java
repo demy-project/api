@@ -4,6 +4,7 @@ import com.demy.platform.iam.domain.model.entities.Role;
 import com.demy.platform.iam.domain.model.events.UserSignedUpEvent;
 import com.demy.platform.iam.domain.model.valueobjects.AccountStatus;
 import com.demy.platform.iam.domain.model.valueobjects.TenantId;
+import com.demy.platform.iam.domain.model.valueobjects.VerificationCode;
 import com.demy.platform.iam.domain.model.valueobjects.VerificationStatus;
 import com.demy.platform.shared.domain.model.aggregates.AuditableAbstractAggregateRoot;
 import com.demy.platform.shared.domain.model.valueobjects.EmailAddress;
@@ -42,28 +43,26 @@ public class User extends AuditableAbstractAggregateRoot<User> {
     @Enumerated(EnumType.STRING)
     private AccountStatus accountStatus;
 
-    private String verificationCode;
-
-    private LocalDateTime verificationCodeExpiresAt;
+    @Embedded
+    private VerificationCode verificationCode;
 
     @Embedded
     private TenantId tenantId;
 
     public User() {}
 
-    public User(EmailAddress emailAddress, String password, String verificationCode, LocalDateTime verificationCodeExpiresAt) {
+    public User(EmailAddress emailAddress, String password, VerificationCode verificationCode) {
         this.emailAddress = emailAddress;
         this.password = password;
         this.verificationCode = verificationCode;
-        this.verificationCodeExpiresAt = verificationCodeExpiresAt;
         this.verificationStatus = VerificationStatus.NOT_VERIFIED;
         this.accountStatus = AccountStatus.PENDING;
         this.roles = new HashSet<>();
         this.tenantId = new TenantId();
     }
 
-    public User(EmailAddress emailAddress, String password, String verificationCode, LocalDateTime verificationCodeExpiresAt, List<Role> roles) {
-        this(emailAddress, password, verificationCode, verificationCodeExpiresAt);
+    public User(EmailAddress emailAddress, String password, VerificationCode verificationCode, List<Role> roles) {
+        this(emailAddress, password, verificationCode);
         addRoles(roles);
     }
 
@@ -86,8 +85,7 @@ public class User extends AuditableAbstractAggregateRoot<User> {
     public void verify() {
         if (verificationStatus != VerificationStatus.NOT_VERIFIED)
             throw new IllegalStateException("User is already verified or in an invalid state");
-        this.verificationCode = null;
-        this.verificationCodeExpiresAt = null;
+        this.verificationCode = new VerificationCode(null, null);
         this.verificationStatus = VerificationStatus.VERIFIED;
     }
 
@@ -97,9 +95,8 @@ public class User extends AuditableAbstractAggregateRoot<User> {
         this.accountStatus = AccountStatus.ACTIVE;
     }
 
-    public void assignNewVerificationCode(String verificationCode, LocalDateTime verificationCodeExpiresAt) {
+    public void assignNewVerificationCode(VerificationCode verificationCode) {
         this.verificationCode = verificationCode;
-        this.verificationCodeExpiresAt = verificationCodeExpiresAt;
     }
 
     public void registerSignUpUser(User user, List<Role> roles) {
