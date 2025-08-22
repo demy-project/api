@@ -1,7 +1,7 @@
 package com.demy.platform.shared.infrastructure.email.javamailsender;
 
-import com.demy.platform.iam.application.internal.outboundservices.email.EmailService;
+import java.util.Map;
 
-public interface TemplatedEmailService extends EmailService {
-
+public interface TemplatedEmailService {
+    void sendEmail(String to, String subject, String templateName, Map<String, Object> variables);
 }
