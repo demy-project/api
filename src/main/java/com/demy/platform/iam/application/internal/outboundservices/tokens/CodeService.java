@@ -1,12 +1,12 @@
 package com.demy.platform.iam.application.internal.outboundservices.tokens;
 
-import org.apache.commons.lang3.tuple.ImmutablePair;
+import com.demy.platform.iam.domain.model.valueobjects.VerificationCode;
 
 import java.time.LocalDateTime;
 
 public interface CodeService {
 
-    ImmutablePair<String, LocalDateTime> generateCode();
+    VerificationCode generateCode();
 
     String generateCode(int length);
 
