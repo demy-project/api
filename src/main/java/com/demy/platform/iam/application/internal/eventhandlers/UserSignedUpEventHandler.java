@@ -4,9 +4,6 @@ import com.demy.platform.iam.application.internal.outboundservices.email.Notific
 import com.demy.platform.iam.domain.model.events.UserSignedUpEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
-
-import java.util.Map;
-
 @Service
 public class UserSignedUpEventHandler {
 
@@ -18,16 +15,10 @@ public class UserSignedUpEventHandler {
 
     @EventListener
     public void handle(UserSignedUpEvent event) {
-        Map<String, Object> variables = Map.of(
-                "code", event.getUser().getVerificationCode(),
-                "expirationMinutes", 15
-        );
-
-        notificationEmailService.sendEmail(
+        notificationEmailService.sendVerificationEmail(
                 event.getUser().getEmailAddress().email(),
-                "Confirma tu cuenta en Demy",
-                "verification-email",
-                variables
+                event.getUser().getVerificationCode(),
+                15
         );
     }
 }
