@@ -5,6 +5,7 @@ import com.demy.platform.iam.domain.model.events.UserVerificationCodeAssignedEve
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 @Service
 public class UserVerificationCodeAssignedEventHandler {
@@ -16,6 +17,7 @@ public class UserVerificationCodeAssignedEventHandler {
         this.emailService = emailService;
     }
 
+    @Async
     @EventListener
     public void handle(UserVerificationCodeAssignedEvent event) {
         LOGGER.info("Handling UserVerificationCodeAssignedEvent for email: {}, code: {}, expiration: {} minutes",
