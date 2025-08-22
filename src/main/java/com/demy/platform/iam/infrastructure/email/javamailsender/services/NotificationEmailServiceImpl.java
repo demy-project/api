@@ -18,7 +18,7 @@ public class NotificationEmailServiceImpl implements UserNotificationEmailServic
     @Override
     public void sendVerificationEmail(String to, String code, int expirationMinutes) {
         sendTemplatedEmail(to, "Confirm your Demy account", "email/verification-email",
-                Map.of("code", code, "expiration", expirationMinutes));
+                Map.of("code", code, "expirationMinutes", expirationMinutes));
     }
 
     @Override
