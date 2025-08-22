@@ -27,11 +27,11 @@ public class UserDetailsImpl implements UserDetails {
     private final boolean enabled;
     private final Collection<? extends GrantedAuthority> authorities;
 
-    public UserDetailsImpl(Long userId, Long tenantId, String username, String password, Collection<? extends GrantedAuthority> authorities) {
+    public UserDetailsImpl(Long userId, String username, String password, Long tenantId, Collection<? extends GrantedAuthority> authorities) {
         this.userId = userId;
-        this.tenantId = tenantId;
         this.username = username;
         this.password = password;
+        this.tenantId = tenantId;
         this.authorities = authorities;
         this.accountNonExpired = true;
         this.accountNonLocked = true;
@@ -44,11 +44,12 @@ public class UserDetailsImpl implements UserDetails {
                 .map(role -> role.getName().name())
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
+        var tenantId = user.getTenantId() != null ? user.getTenantId().tenantId() : null;
         return new UserDetailsImpl(
                 user.getId(),
-                user.getTenantId().tenantId(),
                 user.getEmailAddress().email(),
                 user.getPassword(),
+                tenantId,
                 authorities);
     }
 }
