@@ -1,6 +1,5 @@
 package com.demy.platform.iam.infrastructure.verification.otp.services;
 
-import com.demy.platform.iam.domain.model.valueobjects.VerificationCode;
 import com.demy.platform.iam.infrastructure.verification.otp.OtpSecureVerificationService;
 import org.springframework.stereotype.Service;
 
@@ -13,11 +12,10 @@ public class VerificationServiceImpl implements OtpSecureVerificationService {
     private final SecureRandom secureRandom = new SecureRandom();
 
     @Override
-    public VerificationCode generateCode() {
+    public String generateCode() {
         int max = (int) Math.pow(10, 6) - 1;
         int code = secureRandom.nextInt(max + 1);
-        int expirationMinutes = 15;
-        return new VerificationCode(String.format("%06d", code), LocalDateTime.now().plusMinutes(expirationMinutes));
+        return String.format("%06d", code);
     }
 
     @Override
@@ -25,6 +23,11 @@ public class VerificationServiceImpl implements OtpSecureVerificationService {
         int max = (int) Math.pow(10, length) - 1;
         int code = secureRandom.nextInt(max + 1);
         return String.format("%0" + length + "d", code);
+    }
+
+    @Override
+    public Integer generateExpirationMinutes() {
+        return 15;
     }
 
     @Override
