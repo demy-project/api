@@ -21,6 +21,12 @@ public class NotificationEmailServiceImpl implements UserNotificationEmailServic
                 Map.of("code", code, "expiration", expirationMinutes));
     }
 
+    @Override
+    public void sendPasswordResetEmail(String to, String resetLink) {
+        sendTemplatedEmail(to, "Recover your password", "email/reset-password-email",
+                Map.of("resetLink", resetLink));
+    }
+
     private void sendTemplatedEmail(String to, String subject, String template, Map<String, Object> variables) {
         templatedEmailService.sendEmail(to, subject, template, variables);
     }
