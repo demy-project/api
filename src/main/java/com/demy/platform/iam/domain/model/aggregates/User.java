@@ -1,7 +1,7 @@
 package com.demy.platform.iam.domain.model.aggregates;
 
 import com.demy.platform.iam.domain.model.entities.Role;
-import com.demy.platform.iam.domain.model.events.UserSignedUpEvent;
+import com.demy.platform.iam.domain.model.events.UserVerificationCodeAssignedEvent;
 import com.demy.platform.iam.domain.model.valueobjects.AccountStatus;
 import com.demy.platform.iam.domain.model.valueobjects.TenantId;
 import com.demy.platform.iam.domain.model.valueobjects.VerificationCode;
@@ -14,6 +14,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -81,25 +82,27 @@ public class User extends AuditableAbstractAggregateRoot<User> {
         return verificationStatus == VerificationStatus.VERIFIED;
     }
 
-    public void verify() {
-        if (verificationStatus != VerificationStatus.NOT_VERIFIED)
-            throw new IllegalStateException("User is already verified or in an invalid state");
-        this.verificationCode = new VerificationCode(null, null);
-        this.verificationStatus = VerificationStatus.VERIFIED;
-    }
-
     public void activate() {
         if (verificationStatus != VerificationStatus.VERIFIED)
             throw new IllegalStateException("User must be verified before activation");
         this.accountStatus = AccountStatus.ACTIVE;
     }
 
-    public void assignNewVerificationCode(VerificationCode verificationCode) {
-        this.verificationCode = verificationCode;
+    public void assignVerificationCode(String email, String code, Integer expirationMinutes) {
+        this.verificationCode = new VerificationCode(code, LocalDateTime.now().plusMinutes(expirationMinutes));
+        this.addDomainEvent(new UserVerificationCodeAssignedEvent(
+                this,
+                email,
+                code,
+                expirationMinutes));
     }
 
-    public void registerSignUpUser(User user, List<Role> roles) {
-        this.addDomainEvent(new UserSignedUpEvent(this, user, roles));
+    public void verifyUser(String code) {
+        if (this.isVerified()) throw new IllegalStateException("User is already verified");
+        if (!this.verificationCode.matches(code)) throw new IllegalArgumentException("Invalid verification code");
+        this.verificationCode = new VerificationCode(null, null);
+        this.verificationStatus = VerificationStatus.VERIFIED;
+        this.activate();
     }
 
     public void associateTenant(TenantId tenantId) {
