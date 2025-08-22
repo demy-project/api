@@ -1,10 +1,10 @@
-package com.demy.platform.iam.application.internal.outboundservices.tokens;
+package com.demy.platform.iam.application.internal.outboundservices.verification;
 
 import com.demy.platform.iam.domain.model.valueobjects.VerificationCode;
 
 import java.time.LocalDateTime;
 
-public interface CodeService {
+public interface VerificationService {
 
     VerificationCode generateCode();
 
