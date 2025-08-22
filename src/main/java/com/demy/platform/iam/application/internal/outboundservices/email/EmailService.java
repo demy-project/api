@@ -1,6 +1,6 @@
 package com.demy.platform.iam.application.internal.outboundservices.email;
 
-public interface NotificationEmailService {
+public interface EmailService {
 
     void sendVerificationEmail(String to, String token, int expirationMinutes);
 
