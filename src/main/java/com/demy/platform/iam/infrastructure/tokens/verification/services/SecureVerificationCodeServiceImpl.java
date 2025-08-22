@@ -1,7 +1,7 @@
 package com.demy.platform.iam.infrastructure.tokens.verification.services;
 
+import com.demy.platform.iam.domain.model.valueobjects.VerificationCode;
 import com.demy.platform.iam.infrastructure.tokens.verification.VerificationCodeService;
-import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
@@ -13,11 +13,11 @@ public class SecureVerificationCodeServiceImpl implements VerificationCodeServic
     private final SecureRandom secureRandom = new SecureRandom();
 
     @Override
-    public ImmutablePair<String, LocalDateTime> generateCode() {
+    public VerificationCode generateCode() {
         int max = (int) Math.pow(10, 6) - 1;
         int code = secureRandom.nextInt(max + 1);
         int expirationMinutes = 15;
-        return new ImmutablePair<>(String.format("%0" + 6 + "d", code), LocalDateTime.now().plusMinutes(expirationMinutes));
+        return new VerificationCode(String.format("%06d", code), LocalDateTime.now().plusMinutes(expirationMinutes));
     }
 
     @Override
