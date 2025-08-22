@@ -1,14 +1,14 @@
-package com.demy.platform.iam.infrastructure.tokens.verification.services;
+package com.demy.platform.iam.infrastructure.verification.otp.services;
 
 import com.demy.platform.iam.domain.model.valueobjects.VerificationCode;
-import com.demy.platform.iam.infrastructure.tokens.verification.VerificationCodeService;
+import com.demy.platform.iam.infrastructure.verification.otp.OtpSecureVerificationService;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
 
 @Service
-public class SecureVerificationCodeServiceImpl implements VerificationCodeService {
+public class VerificationServiceImpl implements OtpSecureVerificationService {
 
     private final SecureRandom secureRandom = new SecureRandom();
 
