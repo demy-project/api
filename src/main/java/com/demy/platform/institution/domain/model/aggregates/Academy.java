@@ -104,4 +104,10 @@ public class Academy extends AuditableAbstractAggregateRoot<Academy> {
                 command.ruc()
         );
     }
+
+    public void assignAdministrator(AdministratorId administratorId) {
+        if (this.administratorId != null && this.administratorId.isAssigned())
+            throw new IllegalStateException("Administrator is already assigned to this academy");
+        this.administratorId = administratorId;
+    }
 }
