@@ -1,5 +1,6 @@
 package com.demy.platform.institution.application.internal.commandservices;
 
+import com.demy.platform.institution.domain.exceptions.AdministratorAlreadyExistsException;
 import com.demy.platform.institution.domain.model.aggregates.Administrator;
 import com.demy.platform.institution.domain.model.commands.RegisterAdministratorCommand;
 import com.demy.platform.institution.domain.model.valueobjects.AdministratorId;
@@ -26,7 +27,7 @@ public class AdministratorCommandServiceImpl implements AdministratorCommandServ
     @Transactional
     public Optional<Administrator> handle(RegisterAdministratorCommand command) {
         if (administratorRepository.existsByDniNumber(command.dniNumber()))
-            throw new IllegalArgumentException("An administrator with DNI %s already exists".formatted(command.dniNumber().dniNumber()));
+            throw new AdministratorAlreadyExistsException(command.dniNumber());
         try {
             var administrator = new Administrator(command);
             administrator.registerAdministrator(command.academyId().academyId(), command.userId().userId());
