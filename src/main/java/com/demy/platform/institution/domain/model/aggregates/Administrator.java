@@ -1,14 +1,14 @@
 package com.demy.platform.institution.domain.model.aggregates;
 
 import com.demy.platform.institution.domain.model.commands.RegisterAdministratorCommand;
+import com.demy.platform.institution.domain.model.events.AdministratorRegisteredEvent;
+import com.demy.platform.institution.domain.model.valueobjects.UserId;
 import com.demy.platform.shared.domain.model.aggregates.AuditableAbstractAggregateRoot;
 import com.demy.platform.shared.domain.model.valueobjects.*;
-import jakarta.persistence.*;
-import lombok.Getter;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import lombok.Getter;
 
 @Entity
 public class Administrator extends AuditableAbstractAggregateRoot<Administrator> {
@@ -25,12 +25,13 @@ public class Administrator extends AuditableAbstractAggregateRoot<Administrator>
     @Getter
     private DniNumber dniNumber;
 
-    @ElementCollection
-    @CollectionTable(
-            name = "administrator_academies",
-            joinColumns = @JoinColumn(name = "administrator_id", referencedColumnName = "id")
-    )
-    private Set<AcademyId> academyIds;
+    @Embedded
+    @Getter
+    private AcademyId academyId;
+
+    @Embedded
+    @Getter
+    private UserId userId;
 
     /**
      * Default constructor for JPA
@@ -40,31 +41,36 @@ public class Administrator extends AuditableAbstractAggregateRoot<Administrator>
     public Administrator(
             PersonName personName,
             PhoneNumber phoneNumber,
-            DniNumber dniNumber
+            DniNumber dniNumber,
+            AcademyId academyId,
+            UserId userId
     ) {
         this.personName = personName;
         this.phoneNumber = phoneNumber;
         this.dniNumber = dniNumber;
-        this.academyIds = new HashSet<>();
+        this.academyId = academyId;
+        this.userId = userId;
     }
 
     public Administrator(RegisterAdministratorCommand command) {
         this(
                 command.personName(),
                 command.phoneNumber(),
-                command.dniNumber()
+                command.dniNumber(),
+                command.academyId(),
+                command.userId()
         );
     }
 
-    public void associateAcademy(AcademyId academyId) {
-        this.academyIds.add(academyId);
+    public void registerAdministrator(Long academyId, Long userId) {
+        this.addDomainEvent(new AdministratorRegisteredEvent(this, academyId, userId));
     }
 
     public void disassociateAcademy(AcademyId academyId) {
-        this.academyIds.remove(academyId);
-    }
-
-    public Set<AcademyId> getAcademyIds() {
-        return Collections.unmodifiableSet(academyIds);
+        if (this.academyId != null && this.academyId.equals(academyId)) {
+            this.academyId = new AcademyId();
+        } else {
+            throw new IllegalStateException("Administrator is not associated with the specified academy.");
+        }
     }
 }

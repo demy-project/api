@@ -1,11 +1,14 @@
 package com.demy.platform.institution.domain.model.commands;
 
+import com.demy.platform.institution.domain.model.valueobjects.UserId;
 import com.demy.platform.shared.domain.model.valueobjects.*;
 
 public record RegisterAdministratorCommand(
         PersonName personName,
         PhoneNumber phoneNumber,
-        DniNumber dniNumber
+        DniNumber dniNumber,
+        AcademyId academyId,
+        UserId userId
 ) {
     public RegisterAdministratorCommand {
         if (personName == null)
@@ -14,5 +17,9 @@ public record RegisterAdministratorCommand(
             throw new IllegalArgumentException("Phone number cannot be null");
         if (dniNumber == null)
             throw new IllegalArgumentException("DNI number cannot be null");
+        if (academyId == null)
+            throw new IllegalArgumentException("Academy ID cannot be null");
+        if (userId == null)
+            throw new IllegalArgumentException("User ID cannot be null");
     }
 }
