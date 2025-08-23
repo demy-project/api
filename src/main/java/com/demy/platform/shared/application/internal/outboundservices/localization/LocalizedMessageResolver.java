@@ -1,4 +1,4 @@
-package com.demy.platform.shared.domain.services;
+package com.demy.platform.shared.application.internal.outboundservices.localization;
 
 import java.util.Locale;
 

@@ -1,6 +1,6 @@
 package com.demy.platform.shared.infrastructure.localization.messagesource.services;
 
-import com.demy.platform.shared.domain.services.LocalizedMessageResolver;
+import com.demy.platform.shared.application.internal.outboundservices.localization.LocalizedMessageResolver;
 import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;
 import org.springframework.stereotype.Component;
