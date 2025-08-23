@@ -1,10 +1,7 @@
 package com.demy.platform.iam.infrastructure.identity.springsecurity;
 
-import java.util.Set;
+import com.demy.platform.iam.application.internal.outboundservices.identity.IdentityService;
 
-public interface SpringSecurityCurrentUserProvider {
-    Long getUserId();
-    String getUsername();
-    Set<String> getRoles();
-    Long getTenantId();
+public interface SpringSecurityCurrentUserProvider extends IdentityService {
+
 }
