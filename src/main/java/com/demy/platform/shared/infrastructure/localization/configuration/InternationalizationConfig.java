@@ -1,4 +1,4 @@
-package com.demy.platform.shared.infrastructure.i18n.configuration;
+package com.demy.platform.shared.infrastructure.localization.configuration;
 
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
@@ -15,8 +15,13 @@ public class InternationalizationConfig {
     @Bean
     public MessageSource messageSource() {
         ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
-        messageSource.setBasename("classpath:messages");
+        messageSource.setBasenames(
+                "classpath:messages",
+                "classpath:messages_iam",
+                "classpath:messages_institution"
+        );
         messageSource.setDefaultEncoding("UTF-8");
+        messageSource.setCacheSeconds(1);
         messageSource.setUseCodeAsDefaultMessage(true);
         return messageSource;
     }
