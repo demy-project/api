@@ -16,12 +16,11 @@ public class InternationalizationConfig {
     public MessageSource messageSource() {
         ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
         messageSource.setBasenames(
-                "classpath:messages",
-                "classpath:messages_iam",
-                "classpath:messages_institution"
+                "classpath:i18n/messages",
+                "classpath:i18n/messages_iam",
+                "classpath:i18n/messages_institution"
         );
         messageSource.setDefaultEncoding("UTF-8");
-        messageSource.setCacheSeconds(1);
         messageSource.setUseCodeAsDefaultMessage(true);
         return messageSource;
     }
