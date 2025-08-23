@@ -7,7 +7,7 @@ import java.util.Locale;
  *
  * @since 1.0.0
  */
-public interface MessageResolver {
+public interface LocalizedMessageResolver {
     String getMessage(String code, Object[] args, Locale locale);
     String getMessage(String code, Locale locale);
 }
