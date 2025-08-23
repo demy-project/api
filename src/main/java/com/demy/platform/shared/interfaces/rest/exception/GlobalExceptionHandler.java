@@ -1,4 +1,4 @@
-package com.demy.platform.shared.infrastructure.web;
+package com.demy.platform.shared.interfaces.rest.exception;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -6,7 +6,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import com.demy.platform.shared.domain.exceptions.DomainException;
-import com.demy.platform.shared.infrastructure.i18n.I18nMessageService;
+import com.demy.platform.shared.domain.services.MessageResolver;
 import com.demy.platform.shared.interfaces.rest.resources.ErrorResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,10 +20,10 @@ import org.springframework.web.context.request.WebRequest;
 public class GlobalExceptionHandler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GlobalExceptionHandler.class);
-    private final I18nMessageService i18n;
+    private final MessageResolver messageResolver;
 
-    public GlobalExceptionHandler(I18nMessageService i18n) {
-        this.i18n = i18n;
+    public GlobalExceptionHandler(MessageResolver messageResolver) {
+        this.messageResolver = messageResolver;
     }
 
     /**
@@ -31,7 +31,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(DomainException.class)
     public ResponseEntity<ErrorResource> handleDomainException(DomainException ex, Locale locale, WebRequest request) {
-        String message = i18n.getMessage(ex.getMessageCode(), ex.getArgs(), locale);
+        String message = messageResolver.getMessage(ex.getMessageCode(), ex.getArgs(), locale);
         String path = request.getDescription(false).replace("uri=", "");
         LOGGER.warn("Domain exception: {} at {}", ex.getMessageCode(), path, ex);
         return ResponseEntity
@@ -40,7 +40,7 @@ public class GlobalExceptionHandler {
                         LocalDateTime.now(),
                         HttpStatus.BAD_REQUEST.value(),
                         "Bad Request",
-                        ex.getMessageCode(),
+                        ex.getErrorCode(),
                         message,
                         path
                 ));
@@ -51,7 +51,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResource> handleGenericException(Exception ex, Locale locale, WebRequest request) {
-        String message = i18n.getMessage("error.unexpected", null, locale);
+        String message = messageResolver.getMessage("error.unexpected", null, locale);
         String path = request.getDescription(false).replace("uri=", "");
         LOGGER.error("Unexpected exception at {}: {}", path, ex.getMessage(), ex);
 
