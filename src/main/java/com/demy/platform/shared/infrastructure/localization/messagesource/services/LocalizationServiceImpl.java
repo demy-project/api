@@ -1,6 +1,6 @@
 package com.demy.platform.shared.infrastructure.localization.messagesource.services;
 
-import com.demy.platform.shared.application.internal.outboundservices.localization.LocalizedMessageResolver;
+import com.demy.platform.shared.infrastructure.localization.messagesource.MessageSourceLocalizationService;
 import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;
 import org.springframework.stereotype.Component;
@@ -8,11 +8,11 @@ import org.springframework.stereotype.Component;
 import java.util.Locale;
 
 @Component
-public class MessageResolverImpl implements LocalizedMessageResolver {
+public class LocalizationServiceImpl implements MessageSourceLocalizationService {
 
     private final MessageSource messageSource;
 
-    public MessageResolverImpl(MessageSource messageSource) {
+    public LocalizationServiceImpl(MessageSource messageSource) {
         this.messageSource = messageSource;
     }
 
