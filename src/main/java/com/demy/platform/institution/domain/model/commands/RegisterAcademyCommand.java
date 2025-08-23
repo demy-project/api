@@ -19,7 +19,6 @@ import com.demy.platform.shared.domain.model.valueobjects.StreetAddress;
  * @since 1.0.0
  */
 public record RegisterAcademyCommand(
-        AdministratorId administratorId,
         AcademyName academyName,
         AcademyDescription academyDescription,
         StreetAddress streetAddress,
@@ -30,7 +29,6 @@ public record RegisterAcademyCommand(
     /**
      * Constructs a RegisterAcademyCommand with validation.
      *
-     * @param administratorId the identifier of the administrator
      * @param academyName the name of the academy
      * @param academyDescription the description of the academy
      * @param streetAddress the street address of the academy
@@ -40,8 +38,6 @@ public record RegisterAcademyCommand(
      * @throws IllegalArgumentException if administratorId or ruc is null
      */
     public RegisterAcademyCommand {
-        if (administratorId == null)
-            throw new IllegalArgumentException("AdministratorId cannot be null");
         if (academyName == null)
             throw new IllegalArgumentException("AcademyName cannot be null");
         if (academyDescription == null)

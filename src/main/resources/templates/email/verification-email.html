@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f6f8fa;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 90%;
+            max-width: 600px;
+            margin: 40px auto;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .header img {
+            max-width: 120px;
+            width: 50%;
+            height: auto;
+        }
+        .title {
+            font-size: 24px;
+            color: #333333;
+            margin: 10px 0;
+        }
+        .message {
+            font-size: 16px;
+            color: #555555;
+            line-height: 1.5;
+        }
+        .code {
+            font-size: 28px;
+            color: #3498db;
+            font-weight: bold;
+            text-align: center;
+            margin: 25px 0;
+            letter-spacing: 3px;
+        }
+        .footer {
+            font-size: 12px;
+            color: #999999;
+            text-align: center;
+            margin-top: 30px;
+        }
+        .button {
+            display: inline-block;
+            padding: 12px 25px;
+            margin: 20px 0;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        /* Media queries para móviles */
+        @media only screen and (max-width: 480px) {
+            .container {
+                padding: 20px;
+            }
+            .title {
+                font-size: 20px;
+            }
+            .message {
+                font-size: 14px;
+            }
+            .code {
+                font-size: 24px;
+            }
+            .button {
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <div class="title">Bienvenido a Demy 🎉</div>
+    </div>
+
+    <div class="message">
+        <p>Hola,</p>
+        <p>Tu código de verificación es:</p>
+    </div>
+
+    <div class="code" th:text="${code}">123456</div>
+
+    <div class="message">
+        <p>Expira en <b th:text="${expirationMinutes}">15</b> minutos.</p>
+        <p>Si no solicitaste este código, ignora este correo.</p>
+    </div>
+
+    <div style="text-align: center;">
+        <a href="https://www.demy.com" class="button">Visita Demy</a>
+    </div>
+
+    <div class="footer">
+        © 2025 Demy. Todos los derechos reservados.
+    </div>
+</div>
+</body>
+</html>

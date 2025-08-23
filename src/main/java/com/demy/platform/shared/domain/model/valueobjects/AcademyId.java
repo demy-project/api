@@ -16,7 +16,7 @@ import jakarta.validation.constraints.NotNull;
  */
 @Embeddable
 public record AcademyId(
-        @Column(nullable = false, unique = true)
+        @Column(nullable = false)
         @NotNull
         Long academyId
 ) {

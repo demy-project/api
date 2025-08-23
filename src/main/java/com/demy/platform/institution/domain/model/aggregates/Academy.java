@@ -64,7 +64,6 @@ public class Academy extends AuditableAbstractAggregateRoot<Academy> {
     /**
      * Constructs an Academy instance with the specified administrator ID and RUC.
      *
-     * @param administratorId the ID of the administrator
      * @param academyName the name of the academy
      * @param academyDescription the description of the academy
      * @param streetAddress the street address of the academy
@@ -74,20 +73,19 @@ public class Academy extends AuditableAbstractAggregateRoot<Academy> {
      * @see AdministratorId
      * @see Ruc
      */
-    public Academy(AdministratorId administratorId,
-                   AcademyName academyName,
+    public Academy(AcademyName academyName,
                    AcademyDescription academyDescription,
                    StreetAddress streetAddress,
                    EmailAddress emailAddress,
                    PhoneNumber phoneNumber,
                    Ruc ruc) {
-        this.administratorId = administratorId;
         this.academyName = academyName;
         this.academyDescription = academyDescription;
         this.streetAddress = streetAddress;
         this.emailAddress = emailAddress;
         this.phoneNumber = phoneNumber;
         this.ruc = ruc;
+        this.administratorId = new AdministratorId();
     }
 
     /**
@@ -98,7 +96,6 @@ public class Academy extends AuditableAbstractAggregateRoot<Academy> {
      */
     public Academy(RegisterAcademyCommand command) {
         this(
-                command.administratorId(),
                 command.academyName(),
                 command.academyDescription(),
                 command.streetAddress(),
@@ -106,5 +103,11 @@ public class Academy extends AuditableAbstractAggregateRoot<Academy> {
                 command.phoneNumber(),
                 command.ruc()
         );
+    }
+
+    public void assignAdministrator(AdministratorId administratorId) {
+        if (this.administratorId != null && this.administratorId.isAssigned())
+            throw new IllegalStateException("Administrator is already assigned to this academy");
+        this.administratorId = administratorId;
     }
 }

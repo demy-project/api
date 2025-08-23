@@ -16,8 +16,7 @@ import jakarta.validation.constraints.NotNull;
  */
 @Embeddable
 public record AdministratorId(
-        @Column(nullable = false, unique = true)
-        @NotNull
+        @Column(unique = true)
         Long administratorId
 ) {
     /**
@@ -25,7 +24,7 @@ public record AdministratorId(
      * Initializes the administrator ID with a default value of 0.
      */
     public AdministratorId() {
-        this(0L);
+        this(null);
     }
 
     /**
@@ -35,7 +34,11 @@ public record AdministratorId(
      * @throws IllegalArgumentException if administratorId is null or less than or equal to zero
      */
     public AdministratorId {
-        if (administratorId == null || administratorId <= 0)
-            throw new IllegalArgumentException("Administrator ID cannot be null or less than or equal to zero");
+        if (administratorId != null && administratorId <= 0)
+            throw new IllegalArgumentException("Administrator ID must be greater than zero if provided");
+    }
+
+    public boolean isAssigned() {
+        return administratorId != null && administratorId > 0;
     }
 }
