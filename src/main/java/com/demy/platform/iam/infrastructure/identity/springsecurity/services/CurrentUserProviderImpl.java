@@ -2,6 +2,7 @@ package com.demy.platform.iam.infrastructure.identity.springsecurity.services;
 
 import com.demy.platform.iam.infrastructure.authorization.sfs.model.UserDetailsImpl;
 import com.demy.platform.iam.infrastructure.identity.springsecurity.SpringSecurityCurrentUserProvider;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
@@ -30,7 +31,7 @@ public class CurrentUserProviderImpl implements SpringSecurityCurrentUserProvide
                 .getAuthentication()
                 .getAuthorities()
                 .stream()
-                .map(a -> a.getAuthority())
+                .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toSet())
                 : Set.of();
     }
