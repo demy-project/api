@@ -32,19 +32,19 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DomainException.class)
     public ResponseEntity<ErrorResource> handleDomainException(DomainException ex, Locale locale, WebRequest request) {
         LOGGER.info("Resolved locale: {}", locale);
+        String path = extractPath(request);
         String message = localizationService.getMessage(ex.getMessageCode(), ex.getArgs(), locale);
-        String path = request.getDescription(false).replace("uri=", "");
         LOGGER.warn("Domain exception: {} at {}", ex.getMessageCode(), path, ex);
-        return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body(new ErrorResource(
-                        LocalDateTime.now(),
-                        HttpStatus.BAD_REQUEST.value(),
-                        "Bad Request",
-                        ex.getErrorCode(),
-                        message,
-                        path
-                ));
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, ex.getErrorCode(), message, path);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorResource> handleIllegalArgumentException(IllegalArgumentException ex, Locale locale, WebRequest request) {
+        String path = extractPath(request);
+        String message = localizationService.getMessage("error.bad_request", null, locale);
+        LOGGER.warn("Illegal argument exception at {}: {}", path, ex.getMessage(), ex);
+
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, "error.bad_request", message, path);
     }
 
     /**
@@ -52,61 +52,25 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResource> handleGenericException(Exception ex, Locale locale, WebRequest request) {
+        String path = extractPath(request);
         String message = localizationService.getMessage("error.unexpected", null, locale);
-        String path = request.getDescription(false).replace("uri=", "");
         LOGGER.error("Unexpected exception at {}: {}", path, ex.getMessage(), ex);
-
-        return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new ErrorResource(
-                        LocalDateTime.now(),
-                        HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                        "Internal Server Error",
-                        "error.unexpected",
-                        message,
-                        path
-                ));
+        return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "error.unexpected", message, path);
     }
 
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<Map<String, Object>> handleRuntimeException(
-            RuntimeException ex, WebRequest request) {
-
-        LOGGER.error("Runtime exception occurred: {}", ex.getMessage(), ex);
-
-        Map<String, Object> errorResponse = createErrorResponse(
-                HttpStatus.BAD_REQUEST.value(),
-                "Bad Request",
-                ex.getMessage(),
-                request.getDescription(false).replace("uri=", "")
+    private ResponseEntity<ErrorResource> buildErrorResponse(HttpStatus status, String errorCode, String message, String path) {
+        ErrorResource errorResource = new ErrorResource(
+                LocalDateTime.now(),
+                status.value(),
+                status.getReasonPhrase(),
+                errorCode,
+                message,
+                path
         );
-
-        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errorResource, status);
     }
 
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<Map<String, Object>> handleIllegalArgumentException(
-            IllegalArgumentException ex, WebRequest request) {
-
-        LOGGER.error("Illegal argument exception occurred: {}", ex.getMessage(), ex);
-
-        Map<String, Object> errorResponse = createErrorResponse(
-                HttpStatus.BAD_REQUEST.value(),
-                "Bad Request",
-                ex.getMessage(),
-                request.getDescription(false).replace("uri=", "")
-        );
-
-        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-    }
-
-    private Map<String, Object> createErrorResponse(int status, String error, String message, String path) {
-        Map<String, Object> errorResponse = new HashMap<>();
-        errorResponse.put("timestamp", LocalDateTime.now().toString());
-        errorResponse.put("status", status);
-        errorResponse.put("error", error);
-        errorResponse.put("message", message);
-        errorResponse.put("path", path);
-        return errorResponse;
+    private String extractPath(WebRequest request) {
+        return request.getDescription(false).replace("uri=", "");
     }
 }
