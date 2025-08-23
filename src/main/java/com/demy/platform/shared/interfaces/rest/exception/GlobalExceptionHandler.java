@@ -6,7 +6,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import com.demy.platform.shared.domain.exceptions.DomainException;
-import com.demy.platform.shared.domain.services.LocalizedMessageResolver;
+import com.demy.platform.shared.application.internal.outboundservices.localization.LocalizationService;
 import com.demy.platform.shared.interfaces.rest.resources.ErrorResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,10 +20,10 @@ import org.springframework.web.context.request.WebRequest;
 public class GlobalExceptionHandler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GlobalExceptionHandler.class);
-    private final LocalizedMessageResolver localizedMessageResolver;
+    private final LocalizationService localizationService;
 
-    public GlobalExceptionHandler(LocalizedMessageResolver localizedMessageResolver) {
-        this.localizedMessageResolver = localizedMessageResolver;
+    public GlobalExceptionHandler(LocalizationService localizationService) {
+        this.localizationService = localizationService;
     }
 
     /**
@@ -32,7 +32,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DomainException.class)
     public ResponseEntity<ErrorResource> handleDomainException(DomainException ex, Locale locale, WebRequest request) {
         LOGGER.info("Resolved locale: {}", locale);
-        String message = localizedMessageResolver.getMessage(ex.getMessageCode(), ex.getArgs(), locale);
+        String message = localizationService.getMessage(ex.getMessageCode(), ex.getArgs(), locale);
         String path = request.getDescription(false).replace("uri=", "");
         LOGGER.warn("Domain exception: {} at {}", ex.getMessageCode(), path, ex);
         return ResponseEntity
@@ -52,7 +52,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResource> handleGenericException(Exception ex, Locale locale, WebRequest request) {
-        String message = localizedMessageResolver.getMessage("error.unexpected", null, locale);
+        String message = localizationService.getMessage("error.unexpected", null, locale);
         String path = request.getDescription(false).replace("uri=", "");
         LOGGER.error("Unexpected exception at {}: {}", path, ex.getMessage(), ex);
 
