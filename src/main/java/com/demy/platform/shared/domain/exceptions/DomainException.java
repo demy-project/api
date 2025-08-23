@@ -14,6 +14,11 @@ public abstract class DomainException extends RuntimeException {
         this.args = args;
     }
 
+    /**
+     * Converts a message code to an error code by transforming it to uppercase and replacing dots with underscores.
+     * @param messageCode the message code to convert (e.g., "error.something.happened")
+     * @return the corresponding error code (e.g., "ERROR_SOMETHING_HAPPENED")
+     */
     private String toErrorCode(String messageCode) {
         return messageCode.toUpperCase().replace('.', '_');
     }
