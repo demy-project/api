@@ -1,7 +1,7 @@
-package com.demy.platform.iam.infrastructure.security.spring.services;
+package com.demy.platform.iam.infrastructure.identity.springsecurity.services;
 
 import com.demy.platform.iam.infrastructure.authorization.sfs.model.UserDetailsImpl;
-import com.demy.platform.iam.infrastructure.security.spring.SpringSecurityCurrentUserProvider;
+import com.demy.platform.iam.infrastructure.identity.springsecurity.SpringSecurityCurrentUserProvider;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
