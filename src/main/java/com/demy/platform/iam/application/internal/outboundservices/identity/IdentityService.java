@@ -5,9 +5,9 @@ import java.util.Set;
 
 public interface IdentityService {
 
-    Long getUserId();
+    Optional<Long> getUserId();
 
-    String getUsername();
+    Optional<String> getUsername();
 
     Set<String> getRoles();
 
