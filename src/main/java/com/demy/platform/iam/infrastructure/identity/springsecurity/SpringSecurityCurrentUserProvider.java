@@ -1,4 +1,4 @@
-package com.demy.platform.iam.infrastructure.security.spring;
+package com.demy.platform.iam.infrastructure.identity.springsecurity;
 
 import java.util.Set;
 
