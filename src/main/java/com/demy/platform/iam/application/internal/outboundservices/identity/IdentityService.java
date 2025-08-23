@@ -12,4 +12,6 @@ public interface IdentityService {
     Set<String> getRoles();
 
     Optional<Long> getTenantId();
+
+    default boolean isServiceAccount() {return false;}
 }
