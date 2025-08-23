@@ -1,4 +1,4 @@
-package com.demy.platform.shared.infrastructure.localization.configuration;
+package com.demy.platform.shared.infrastructure.localization.messagesource.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -8,7 +8,7 @@ import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver;
 import java.util.Locale;
 
 @Configuration
-public class InternationalizationConfig {
+public class LocalizationConfiguration {
     @Bean
     public LocaleResolver localeResolver() {
         AcceptHeaderLocaleResolver localeResolver = new AcceptHeaderLocaleResolver();
