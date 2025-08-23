@@ -1,17 +1,17 @@
 package com.demy.platform.shared.interfaces.rest.exception;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 
 import com.demy.platform.shared.domain.exceptions.DomainException;
 import com.demy.platform.shared.application.internal.outboundservices.localization.LocalizationService;
 import com.demy.platform.shared.interfaces.rest.resources.ErrorResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -43,8 +43,27 @@ public class GlobalExceptionHandler {
         String path = extractPath(request);
         String message = localizationService.getMessage("error.bad_request", null, locale);
         LOGGER.warn("Illegal argument exception at {}: {}", path, ex.getMessage(), ex);
-
         return buildErrorResponse(HttpStatus.BAD_REQUEST, "error.bad_request", message, path);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResource> handleValidationException(MethodArgumentNotValidException ex, Locale locale, WebRequest request) {
+        String path = extractPath(request);
+        String message = ex.getBindingResult().getAllErrors()
+                .stream()
+                .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                .reduce((m1, m2) -> m1 + "; " + m2)
+                .orElse(localizationService.getMessage("error.bad_request", null, locale));
+        LOGGER.warn("Validation exception at {}: {}", path, message, ex);
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, "error.validation", message, path);
+    }
+
+    @ExceptionHandler({NullPointerException.class, IllegalStateException.class})
+    public ResponseEntity<ErrorResource> handleSpecificRuntimeExceptions(RuntimeException ex, Locale locale, WebRequest request) {
+        String path = extractPath(request);
+        String message = localizationService.getMessage("error.runtime", null, locale);
+        LOGGER.error("Runtime exception at {}: {}", path, ex.getMessage(), ex);
+        return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "error.runtime", message, path);
     }
 
     /**
