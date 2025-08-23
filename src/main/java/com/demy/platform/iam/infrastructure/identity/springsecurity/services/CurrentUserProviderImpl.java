@@ -37,18 +37,18 @@ public class CurrentUserProviderImpl implements SpringSecurityCurrentUserProvide
     }
 
     @Override
-    public Long getTenantId() {
+    public Optional<Long> getTenantId() {
+        var principal = (UserDetailsImpl) SecurityContextHolder.getContext()
+                .getAuthentication().getPrincipal();
+        return Optional.ofNullable(principal.getTenantId());
+    }
+
+    public Long getNoOptionalTenantId() {
         var principal = (UserDetailsImpl) SecurityContextHolder.getContext()
                 .getAuthentication().getPrincipal();
         var tenantId = principal.getTenantId();
         if (tenantId == null)
             throw new IllegalStateException("Tenant ID is not set for the current user");
         return tenantId;
-    }
-
-    public Optional<Long> getOptionalTenantId() {
-        var principal = (UserDetailsImpl) SecurityContextHolder.getContext()
-                .getAuthentication().getPrincipal();
-        return Optional.ofNullable(principal.getTenantId());
     }
 }
