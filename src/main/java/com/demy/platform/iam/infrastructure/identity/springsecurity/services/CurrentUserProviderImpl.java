@@ -13,42 +13,44 @@ import java.util.stream.Collectors;
 public class CurrentUserProviderImpl implements SpringSecurityCurrentUserProvider {
 
     @Override
-    public Long getUserId() {
-        var principal = (UserDetailsImpl) SecurityContextHolder.getContext()
-                .getAuthentication().getPrincipal();
-        return principal.getUserId();
+    public Optional<Long> getUserId() {
+        return getPrincipal().map(UserDetailsImpl::getUserId);
     }
 
     @Override
-    public String getUsername() {
-        var principal = (UserDetailsImpl) SecurityContextHolder.getContext()
-                .getAuthentication().getPrincipal();
-        return principal.getUsername();
+    public Optional<String> getUsername() {
+        return getPrincipal().map(UserDetailsImpl::getUsername);
     }
 
     @Override
     public Set<String> getRoles() {
         return SecurityContextHolder.getContext()
+                .getAuthentication() != null
+                ? SecurityContextHolder.getContext()
                 .getAuthentication()
                 .getAuthorities()
                 .stream()
                 .map(a -> a.getAuthority())
-                .collect(Collectors.toSet());
+                .collect(Collectors.toSet())
+                : Set.of();
     }
 
     @Override
     public Optional<Long> getTenantId() {
-        var principal = (UserDetailsImpl) SecurityContextHolder.getContext()
-                .getAuthentication().getPrincipal();
-        return Optional.ofNullable(principal.getTenantId());
+        return getPrincipal().map(UserDetailsImpl::getTenantId);
     }
 
-    public Long getNoOptionalTenantId() {
-        var principal = (UserDetailsImpl) SecurityContextHolder.getContext()
-                .getAuthentication().getPrincipal();
-        var tenantId = principal.getTenantId();
-        if (tenantId == null)
-            throw new IllegalStateException("Tenant ID is not set for the current user");
-        return tenantId;
+    @Override
+    public boolean isServiceAccount() {
+        // TODO: Implement logic to determine if the current user is a service account
+        return false;
+    }
+
+    private Optional<UserDetailsImpl> getPrincipal() {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !(authentication.getPrincipal() instanceof UserDetailsImpl principal)) {
+            return Optional.empty();
+        }
+        return Optional.of(principal);
     }
 }
