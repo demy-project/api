@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -63,6 +64,16 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResource, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ErrorResource> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex, Locale locale, WebRequest request) {
+        var path = extractPath(request);
+        var message = localizationService.getMessage(extractMessageKeyFromException(ex), null, locale);
+        LOGGER.warn("Malformed JSON request at {}: {}", path, ex.getMessage());
+        var errorResource = ErrorResourceFromExceptionAssembler.toResourceFromException(
+                HttpStatus.BAD_REQUEST.name(), HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase(), message, path);
+        return new ResponseEntity<>(errorResource, HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler({NullPointerException.class, IllegalStateException.class})
     public ResponseEntity<ErrorResource> handleSpecificRuntimeExceptions(RuntimeException ex, Locale locale, WebRequest request) {
         var path = extractPath(request);
@@ -79,7 +90,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResource> handleGenericException(Exception ex, Locale locale, WebRequest request) {
         var path = extractPath(request);
-        var message = localizationService.getMessage(extractMessageKeyFromException(ex), null, locale);
+        var message = localizationService.getMessage(HttpStatus.BAD_REQUEST.name().toLowerCase(), null, locale);
         LOGGER.error("Unexpected exception at {}: {}", path, ex.getMessage(), ex);
         var errorResource = ErrorResourceFromExceptionAssembler.toResourceFromException(
                 HttpStatus.INTERNAL_SERVER_ERROR.name(), HttpStatus.INTERNAL_SERVER_ERROR.value(), HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), message, path);
