@@ -19,7 +19,7 @@ public class LocalizationServiceImpl implements MessageSourceLocalizationService
     @Override
     public String getMessage(String code, Object[] args, Locale locale) {
         try {
-            return messageSource.getMessage(code, args, locale);
+            return messageSource.getMessage(toPropertyKey(code), args, locale);
         } catch (NoSuchMessageException e) {
             return code + (args != null && args.length > 0 ? formatArgs(args) : "");
         }
@@ -28,6 +28,10 @@ public class LocalizationServiceImpl implements MessageSourceLocalizationService
     @Override
     public String getMessage(String code, Locale locale) {
         return getMessage(code, null, locale);
+    }
+
+    private String toPropertyKey(String code) {
+        return code.toLowerCase().replace('_', '.');
     }
 
     private String formatArgs(Object[] args) {
