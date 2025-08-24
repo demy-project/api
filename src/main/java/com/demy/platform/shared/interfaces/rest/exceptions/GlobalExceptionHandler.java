@@ -43,10 +43,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorResource> handleIllegalArgumentException(IllegalArgumentException ex, Locale locale, WebRequest request) {
         var path = extractPath(request);
-        var message = localizationService.getMessage("error.bad_request", null, locale);
+        var message = localizationService.getMessage(HttpStatus.BAD_REQUEST.name().toLowerCase(), null, locale);
         LOGGER.warn("Illegal argument exception at {}: {}", path, ex.getMessage(), ex);
         var errorResource = ErrorResourceFromExceptionAssembler.toResourceFromException(
-                "BAD_REQUEST", HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase(), message, path);
+                HttpStatus.BAD_REQUEST.name(), HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase(), message, path);
         return new ResponseEntity<>(errorResource, HttpStatus.BAD_REQUEST);
     }
 
@@ -57,19 +57,19 @@ public class GlobalExceptionHandler {
                 .stream()
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .reduce((m1, m2) -> m1 + "; " + m2)
-                .orElse(localizationService.getMessage("error.validation", null, locale));
+                .orElse(localizationService.getMessage(extractMessageKeyFromException(ex), null, locale));
         var errorResource = ErrorResourceFromExceptionAssembler.toResourceFromException(
-                "BAD_REQUEST", HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase(), message, path);
+                HttpStatus.BAD_REQUEST.name(), HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase(), message, path);
         return new ResponseEntity<>(errorResource, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler({NullPointerException.class, IllegalStateException.class})
     public ResponseEntity<ErrorResource> handleSpecificRuntimeExceptions(RuntimeException ex, Locale locale, WebRequest request) {
         var path = extractPath(request);
-        var message = localizationService.getMessage("error.runtime", null, locale);
+        var message = localizationService.getMessage(extractMessageKeyFromException(ex), null, locale);
         LOGGER.error("Runtime exception at {}: {}", path, ex.getMessage(), ex);
         var errorResource = ErrorResourceFromExceptionAssembler.toResourceFromException(
-                "INTERNAL_SERVER_ERROR", HttpStatus.INTERNAL_SERVER_ERROR.value(), HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), message, path);
+                HttpStatus.INTERNAL_SERVER_ERROR.name(), HttpStatus.INTERNAL_SERVER_ERROR.value(), HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), message, path);
         return new ResponseEntity<>(errorResource, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
@@ -79,14 +79,18 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResource> handleGenericException(Exception ex, Locale locale, WebRequest request) {
         var path = extractPath(request);
-        var message = localizationService.getMessage("error.unexpected", null, locale);
+        var message = localizationService.getMessage(extractMessageKeyFromException(ex), null, locale);
         LOGGER.error("Unexpected exception at {}: {}", path, ex.getMessage(), ex);
         var errorResource = ErrorResourceFromExceptionAssembler.toResourceFromException(
-                "INTERNAL_SERVER_ERROR", HttpStatus.INTERNAL_SERVER_ERROR.value(), HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), message, path);
+                HttpStatus.INTERNAL_SERVER_ERROR.name(), HttpStatus.INTERNAL_SERVER_ERROR.value(), HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), message, path);
         return new ResponseEntity<>(errorResource, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     private String extractPath(WebRequest request) {
         return request.getDescription(false).replace("uri=", "");
+    }
+
+    private String extractMessageKeyFromException(Exception ex) {
+        return ex.getClass().getSimpleName().replace("Exception", "").toLowerCase();
     }
 }
