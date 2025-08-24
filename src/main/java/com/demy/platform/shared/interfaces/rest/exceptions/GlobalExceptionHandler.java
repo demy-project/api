@@ -90,7 +90,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResource> handleGenericException(Exception ex, Locale locale, WebRequest request) {
         var path = extractPath(request);
-        var message = localizationService.getMessage(HttpStatus.BAD_REQUEST.name().toLowerCase(), null, locale);
+        var message = localizationService.getMessage(HttpStatus.INTERNAL_SERVER_ERROR.name().toLowerCase(), null, locale);
         LOGGER.error("Unexpected exception at {}: {}", path, ex.getMessage(), ex);
         var errorResource = ErrorResourceFromExceptionAssembler.toResourceFromException(
                 HttpStatus.INTERNAL_SERVER_ERROR.name(), HttpStatus.INTERNAL_SERVER_ERROR.value(), HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), message, path);
