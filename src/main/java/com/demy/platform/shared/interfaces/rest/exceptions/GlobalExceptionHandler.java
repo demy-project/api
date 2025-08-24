@@ -1,11 +1,11 @@
 package com.demy.platform.shared.interfaces.rest.exceptions;
 
-import java.time.LocalDateTime;
 import java.util.Locale;
 
 import com.demy.platform.shared.domain.exceptions.DomainException;
 import com.demy.platform.shared.application.internal.outboundservices.localization.LocalizationService;
 import com.demy.platform.shared.interfaces.rest.resources.ErrorResource;
+import com.demy.platform.shared.interfaces.rest.transform.ErrorResourceFromExceptionAssembler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -32,38 +32,45 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DomainException.class)
     public ResponseEntity<ErrorResource> handleDomainException(DomainException ex, Locale locale, WebRequest request) {
         LOGGER.info("Resolved locale: {}", locale);
-        String path = extractPath(request);
-        String message = localizationService.getMessage(ex.getMessageCode(), ex.getArgs(), locale);
-        LOGGER.warn("Domain exception: {} at {}", ex.getMessageCode(), path, ex);
-        return buildErrorResponse(HttpStatus.BAD_REQUEST, ex.getErrorCode(), message, path);
+        var path = extractPath(request);
+        var message = localizationService.getMessage(ex.getDomainError().name(), ex.getArgs(), locale);
+        LOGGER.warn("Domain exception: {} at {}", ex.getDomainError().name(), path, ex);
+        var errorResource = ErrorResourceFromExceptionAssembler.toResourceFromException(
+                ex.getDomainError().name(), HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase(), message, path);
+        return new ResponseEntity<>(errorResource, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorResource> handleIllegalArgumentException(IllegalArgumentException ex, Locale locale, WebRequest request) {
-        String path = extractPath(request);
-        String message = localizationService.getMessage("error.bad_request", null, locale);
+        var path = extractPath(request);
+        var message = localizationService.getMessage("error.bad_request", null, locale);
         LOGGER.warn("Illegal argument exception at {}: {}", path, ex.getMessage(), ex);
-        return buildErrorResponse(HttpStatus.BAD_REQUEST, "error.bad_request", message, path);
+        var errorResource = ErrorResourceFromExceptionAssembler.toResourceFromException(
+                "BAD_REQUEST", HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase(), message, path);
+        return new ResponseEntity<>(errorResource, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResource> handleValidationException(MethodArgumentNotValidException ex, Locale locale, WebRequest request) {
-        String path = extractPath(request);
-        String message = ex.getBindingResult().getAllErrors()
+        var path = extractPath(request);
+        var message = ex.getBindingResult().getAllErrors()
                 .stream()
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .reduce((m1, m2) -> m1 + "; " + m2)
                 .orElse(localizationService.getMessage("error.bad_request", null, locale));
-        LOGGER.warn("Validation exception at {}: {}", path, message, ex);
-        return buildErrorResponse(HttpStatus.BAD_REQUEST, "error.validation", message, path);
+        var errorResource = ErrorResourceFromExceptionAssembler.toResourceFromException(
+                "BAD_REQUEST", HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase(), message, path);
+        return new ResponseEntity<>(errorResource, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler({NullPointerException.class, IllegalStateException.class})
     public ResponseEntity<ErrorResource> handleSpecificRuntimeExceptions(RuntimeException ex, Locale locale, WebRequest request) {
-        String path = extractPath(request);
-        String message = localizationService.getMessage("error.runtime", null, locale);
+        var path = extractPath(request);
+        var message = localizationService.getMessage("error.runtime", null, locale);
         LOGGER.error("Runtime exception at {}: {}", path, ex.getMessage(), ex);
-        return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "error.runtime", message, path);
+        var errorResource = ErrorResourceFromExceptionAssembler.toResourceFromException(
+                "INTERNAL_SERVER_ERROR", HttpStatus.INTERNAL_SERVER_ERROR.value(), HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), message, path);
+        return new ResponseEntity<>(errorResource, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     /**
@@ -71,22 +78,12 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResource> handleGenericException(Exception ex, Locale locale, WebRequest request) {
-        String path = extractPath(request);
-        String message = localizationService.getMessage("error.unexpected", null, locale);
+        var path = extractPath(request);
+        var message = localizationService.getMessage("error.unexpected", null, locale);
         LOGGER.error("Unexpected exception at {}: {}", path, ex.getMessage(), ex);
-        return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "error.unexpected", message, path);
-    }
-
-    private ResponseEntity<ErrorResource> buildErrorResponse(HttpStatus status, String errorCode, String message, String path) {
-        ErrorResource errorResource = new ErrorResource(
-                LocalDateTime.now(),
-                status.value(),
-                status.getReasonPhrase(),
-                errorCode,
-                message,
-                path
-        );
-        return new ResponseEntity<>(errorResource, status);
+        var errorResource = ErrorResourceFromExceptionAssembler.toResourceFromException(
+                "INTERNAL_SERVER_ERROR", HttpStatus.INTERNAL_SERVER_ERROR.value(), HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), message, path);
+        return new ResponseEntity<>(errorResource, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     private String extractPath(WebRequest request) {
