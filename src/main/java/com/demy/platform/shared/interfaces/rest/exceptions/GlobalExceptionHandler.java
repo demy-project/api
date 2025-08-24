@@ -1,4 +1,4 @@
-package com.demy.platform.shared.interfaces.rest.exception;
+package com.demy.platform.shared.interfaces.rest.exceptions;
 
 import java.time.LocalDateTime;
 import java.util.Locale;
