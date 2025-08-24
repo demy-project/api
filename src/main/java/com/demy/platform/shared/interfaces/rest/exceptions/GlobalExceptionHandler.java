@@ -57,7 +57,7 @@ public class GlobalExceptionHandler {
                 .stream()
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .reduce((m1, m2) -> m1 + "; " + m2)
-                .orElse(localizationService.getMessage("error.bad_request", null, locale));
+                .orElse(localizationService.getMessage("error.validation", null, locale));
         var errorResource = ErrorResourceFromExceptionAssembler.toResourceFromException(
                 "BAD_REQUEST", HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase(), message, path);
         return new ResponseEntity<>(errorResource, HttpStatus.BAD_REQUEST);
